@@ -6,8 +6,6 @@ class TestProductManager(FixtureTest):
     """
     Test class for testing product manager class
     """
-
-
     def test_product_manager_init(self):
         self.assertIsInstance(product_manager.products, dict)
 
