@@ -51,9 +51,28 @@ class SaleRecordsView(MethodView):
         return all_sales_response(convert_list_to_json(sales), 'successful', 200)
 
 
+class SaleView(MethodView):
+    """
+        A method view class to handle requests with /sales/<int:id>
+        endpoint
+    """
+
+    methods = ['GET']
+
+    def get(self, sale_id):
+        # GET request to fetch a product by id
+
+        sale = sale_manager.fetch_sale_record(sale_id)
+        if not isinstance(sale, Sale):
+            return response(sale, 'unsuccessful', 400)
+        return sale_response(sale, 'successful', 200)
+
+
 # Register a class as a view
 sales = SaleRecordsView.as_view('sales')
+sale = SaleView.as_view('sale')
 
 
 # Add url_rules for the API endpoints
 sales_bp.add_url_rule('/sales', view_func=sales)
+sales_bp.add_url_rule('/sales/<int:sale_id>', view_func=sale)
