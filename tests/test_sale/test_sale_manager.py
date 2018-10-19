@@ -12,4 +12,4 @@ class TestSaleManager(FixtureTest):
 
     def test_add_new_sale_increases_sale_records_count(self):
         sale_manager.add_sale_record(self.sale)
-        self.assertEqual(len(sale_manager.sale_records), 2)
+        self.assertEqual(len(sale_manager.sale_records), 3)
