@@ -16,6 +16,7 @@ class ProductListView(MethodView):
     """
 
     methods = ['POST', 'GET']
+
     # create a product
     def post(self):
         # check for a valid content type
