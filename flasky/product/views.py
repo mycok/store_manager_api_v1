@@ -16,11 +16,12 @@ class ProductListView(MethodView):
     """
 
     methods = ['POST', 'GET']
-
+    # create a product
     def post(self):
         # check for a valid content type
         if not request.content_type == 'application/json':
-            return response('request must be of type json', 'unsuccessful', 400)
+            return response('request must be of type json',
+                            'unsuccessful', 400)
         # extract request data
         request_data = request.get_json()
         name = request_data.get('name')
@@ -39,6 +40,17 @@ class ProductListView(MethodView):
             return response(is_existing_product, 'unsuccessful', 400)
         # return response with a new product
         return product_response(new_product, 201)
+
+    # fetch all products
+    def get(self):
+        """
+         GET request to fetch all products
+        """
+
+        products = product_manager.fetch_all_products()
+        if not isinstance(products, list):
+            return response(products, 'unsuccessful', 400)
+        return all_list_response(convert_list_to_json(products), 'successful', 200)
 
 
 # Register a class as a view
