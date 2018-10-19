@@ -18,6 +18,7 @@ class SaleRecordsView(MethodView):
 
     methods = ['POST', 'GET']
 
+    # create a sale
     def post(self):
         # check for a valid content type
         if not request.content_type == 'application/json':
@@ -37,6 +38,17 @@ class SaleRecordsView(MethodView):
         sale_manager.add_sale_record(new_sale)
         # return response with a new sale
         return sale_response(new_sale, 'successful', 201)
+
+    # fetch all sales
+    def get(self):
+        """
+         GET request to fetch all sales
+        """
+
+        sales = sale_manager.fetch_all_sale_records()
+        if not isinstance(sales, list):
+            return response(sales, 'unsuccessful', 400)
+        return all_sales_response(convert_list_to_json(sales), 'successful', 200)
 
 
 # Register a class as a view
