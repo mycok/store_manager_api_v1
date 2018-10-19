@@ -54,9 +54,27 @@ class ProductListView(MethodView):
         return all_list_response(convert_list_to_json(products), 'successful', 200)
 
 
+class ProductView(MethodView):
+    """
+        A method view class to handle requests with /products/<int:id endpoint
+    """
+
+    methods = ['GET']
+
+    def get(self, p_id):
+        # GET request to fetch a product by id
+
+        product = product_manager.fetch_product(p_id)
+        if not isinstance(product, Product):
+            return response(product, 'unsuccessful', 400)
+        return product_response(product, 200)
+
+
 # Register a class as a view
 products = ProductListView.as_view('products')
+product = ProductView.as_view('product')
 
 
 # Add url_rules for the API endpoints
 products_bp.add_url_rule('/products', view_func=products)
+products_bp.add_url_rule('/products/<int:p_id>', view_func=product)
