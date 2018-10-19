@@ -1,0 +1,16 @@
+# declare python version
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -r requirements.txt
+  - pip install pytest pytest-cov
+  - pip install coveralls
+script:
+  - py.test
+  - py.test --cov
+branches:
+  only:
+    - fetch_sale_by_id
+after_success:
+  - coveralls
