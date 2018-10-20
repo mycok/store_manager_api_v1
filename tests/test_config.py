@@ -5,7 +5,7 @@ from flasky import create_app
 
 class TestConfiguration(FixtureTest):
     """
-    Test class for testing application configurations
+    Test class for application configurations
     """
 
     def test_config(self):

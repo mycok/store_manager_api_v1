@@ -5,9 +5,7 @@ from tests.fixture import FixtureTest
 class TestCreateProduct(FixtureTest):
 
     def test_create_a_product(self):
-        """
-        Test successful POST request to create a product
-        """
+        # Test successful POST request to create a product
         with self.client:
             response = self.create_product()
             data = json.loads(response.data.decode())
@@ -15,9 +13,7 @@ class TestCreateProduct(FixtureTest):
             self.assertEqual(data['name'], 'macbook air')
 
     def test_cant_create_a_duplicate_product(self):
-        """
-        Test successful POST request to create a product
-        """
+        # Test successful POST request to create a product
         with self.client:
             response = self.create_product()
             self.assertEqual(response.status_code, 201)

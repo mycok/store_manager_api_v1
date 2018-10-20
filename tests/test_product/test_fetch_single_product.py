@@ -5,9 +5,7 @@ from tests.fixture import FixtureTest
 class TestFetchSingleProduct(FixtureTest):
 
     def test_get_product_by_id(self):
-        """
-        Test successful GET request to fetch a product by id
-        """
+        # Test successful GET request to fetch a product by id
         with self.client:
             # post a product
             _ = self.create_product()

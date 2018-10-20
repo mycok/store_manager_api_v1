@@ -4,11 +4,10 @@ from tests.fixture import FixtureTest
 
 class TestFetchSingleSale(FixtureTest):
     """
+    Test fetch single sale object
     """
     def test_get_sale_by_id(self):
-        """
-        Test successful GET request to fetch a sale by id
-        """
+        # Test successful GET request to fetch a sale by id
         with self.client:
             # post a product
             _ = self.create_product()
@@ -25,7 +24,7 @@ class TestFetchSingleSale(FixtureTest):
     def test_cant_fetch_a_sale_an_with_out_of_range_index(self):
         """
         Test unsuccessful GET request to fetch
-         a sale with an out of range id index
+        a sale with an out of range id index
         """
         with self.client:
              # post a product

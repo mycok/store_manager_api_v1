@@ -7,9 +7,7 @@ class TestCreateSale(FixtureTest):
 
     """
     def test_create_a_sale(self):
-        """
-        Test successful POST request to create a sale
-        """
+        # Test successful POST request to create a sale
         with self.client:
             # first create a product to append to a sale
             _ = self.create_product()
@@ -21,7 +19,7 @@ class TestCreateSale(FixtureTest):
 
     def test_create_sale_with_wrong_content_type(self):
         """
-         Test unsuccessful POST request to
+        Test unsuccessful POST request to
         create a sale with wrong content type
         """
         with self.client:
@@ -49,7 +47,7 @@ class TestCreateSale(FixtureTest):
 
     def test_cant_create_sale_with_an_empty_string(self):
         """
-         Test unsuccessful POST request to
+        Test unsuccessful POST request to
         create a sale with an empty string
         """
         with self.client:

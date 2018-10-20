@@ -4,7 +4,7 @@ from flasky.sale.model import Sale
 
 class TestSaleModel(FixtureTest):
     """
-    Test sale initialisation
+    Test sale object initialisation
     """
 
     def test_sale_init(self):
