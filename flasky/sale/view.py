@@ -42,7 +42,7 @@ class SaleRecordsView(MethodView):
     # fetch all sales
     def get(self):
         """
-         GET request to fetch all sales
+        fetch all sales
         """
 
         sales = sale_manager.fetch_all_sale_records()
