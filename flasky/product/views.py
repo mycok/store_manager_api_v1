@@ -46,7 +46,7 @@ class ProductListView(MethodView):
     def get(self):
 
         products = product_manager.fetch_all_products()
-        if not isinstance(products, list):
+        if isinstance(products, str):
             return response(products, 'unsuccessful', 400)
         return all_list_response(convert_list_to_json(products), 'successful', 200)
 
