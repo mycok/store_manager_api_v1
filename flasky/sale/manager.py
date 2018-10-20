@@ -1,4 +1,6 @@
 from flasky.product.manager import product_manager
+from flasky.helper_funcs import search_dict_by_key
+from flasky.helper_funcs import return_all_dict_values
 
 
 class SaleManager:
@@ -19,16 +21,13 @@ class SaleManager:
 
     # fetch sale record by id
     def fetch_sale_record(self, sale_id):
-        try:
-            return self.sale_records[sale_id]
-        except KeyError:
-            return 'sale record with ID ' + str(sale_id) + ' doesnot exist'
+        value_name = 'sale record'
+        return search_dict_by_key(self.sale_records, sale_id, value_name)
 
     # fetch all sale reccords
     def fetch_all_sale_records(self):
-        if len(self.sale_records) > 0:
-            return [v for v in self.sale_records.values()]
-        return 'No sale records available'
+        value_name = 'sales records'
+        return return_all_dict_values(self.sale_records, value_name)
 
     # add products to a sale helper method
     def add_products(self, new_sale, name):
