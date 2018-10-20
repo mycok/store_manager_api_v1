@@ -1,3 +1,7 @@
+from flasky.helper_funcs import search_dict_by_key
+from flasky.helper_funcs import return_all_dict_values
+
+
 class ProductManager:
     """
     Manager class for handling product
@@ -23,7 +27,6 @@ class ProductManager:
         for v in products:
             if v.name == name:
                 return 'Product ' + v.name + ' already exists'
-        print(products)
         return False
 
     def fetch_product_by_name(self, name):
@@ -33,15 +36,12 @@ class ProductManager:
                 return v
 
     def fetch_product(self, p_id):
-        try:
-            return self.products[p_id]
-        except KeyError:
-            return 'product with ID ' + str(p_id) + ' doesnot exist'
+        value_name = 'product'
+        return search_dict_by_key(self.products, p_id, value_name)
 
     def fetch_all_products(self):
-        if len(self.products) > 0:
-            return [v for v in self.products.values()]
-        return 'No products available'
+        value_name = 'products'
+        return return_all_dict_values(self.products, value_name)
 
 # create an instance of a product manager class
 product_manager = ProductManager()
