@@ -41,10 +41,6 @@ class SaleRecordsView(MethodView):
 
     # fetch all sales
     def get(self):
-        """
-        fetch all sales
-        """
-
         sales = sale_manager.fetch_all_sale_records()
         if not isinstance(sales, list):
             return response(sales, 'unsuccessful', 400)
@@ -61,7 +57,6 @@ class SaleView(MethodView):
 
     def get(self, sale_id):
         # GET request to fetch a product by id
-
         sale = sale_manager.fetch_sale_record(sale_id)
         if not isinstance(sale, Sale):
             return response(sale, 'unsuccessful', 400)

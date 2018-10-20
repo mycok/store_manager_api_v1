@@ -44,9 +44,6 @@ class ProductListView(MethodView):
 
     # fetch all products
     def get(self):
-        """
-        fetch all products
-        """
 
         products = product_manager.fetch_all_products()
         if not isinstance(products, list):
@@ -63,7 +60,6 @@ class ProductView(MethodView):
 
     def get(self, p_id):
         # GET request to fetch a product by id
-
         product = product_manager.fetch_product(p_id)
         if not isinstance(product, Product):
             return response(product, 'unsuccessful', 400)
