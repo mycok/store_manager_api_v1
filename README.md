@@ -1,13 +1,33 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/c4b765fc3ef09ddeadf2/maintainability)](https://codeclimate.com/github/mkibuuka/store_manager_api_v1/maintainability) [![Build Status](https://travis-ci.org/mkibuuka/store_manager_api_v1.svg?branch=fetch_sale_by_id)](https://travis-ci.org/mkibuuka/store_manager_api_v1) [![Coverage Status](https://coveralls.io/repos/github/mkibuuka/store_manager_api_v1/badge.svg?branch=fetch_sale_by_id)](https://coveralls.io/github/mkibuuka/store_manager_api_v1?branch=fetch_sale_by_id)
-## Store Manager_API_V1
-Store manager API provides an interface for accessing and manupilating store manager resources.
 
-### This repo includes store manager_API_v1 source code files for:
+## Store Manager_API_V1  [![Maintainability](https://api.codeclimate.com/v1/badges/c4b765fc3ef09ddeadf2/maintainability)](https://codeclimate.com/github/mkibuuka/store_manager_api_v1/maintainability) [![Build Status](https://travis-ci.org/mkibuuka/store_manager_api_v1.svg?branch=fetch_sale_by_id)](https://travis-ci.org/mkibuuka/store_manager_api_v1) [![Coverage Status](https://coveralls.io/repos/github/mkibuuka/store_manager_api_v1/badge.svg?branch=fetch_sale_by_id)](https://coveralls.io/github/mkibuuka/store_manager_api_v1?branch=fetch_sale_by_id)
+
+Store manager API provides an interface for accessing and manupilating product store resources.
+
+### This repo includes store manager_API_v1 source code files for
 * Endpoints
 * Unittests/pytests
 * Flask
 * Product Models
 * Sales Models
+
+### Requirements
+* Python 3x and up
+* Flask python web framework
+
+## Development
+```
+$ create a python virtualenv
+$ source/bin/activate
+$ pip install flask
+```
+
+### Usage
+
+```python
+git clone https://github.com/mkibuuka/store_manager_api_v1.git
+cd store_manager_api_v1
+python run.py
+```
 
 ### Product Models:
 These represent a product that could be created by a user on the app platform. The product object takes four required attributes (name, category, quantity, price).
@@ -49,7 +69,7 @@ A **url** to fetch a single product by **id** could take a **GET** request to an
 A **url** to fetch all products could take a **GET** request to an endpoint with a format such as **api/v1/products** and the response could be formatted as below:
 ```json
 {
-	
+
     "products": [
         {
             "P_id": 1,
@@ -98,4 +118,3 @@ response:
     "status": "successful"
 }
 ```
-
