@@ -45,7 +45,7 @@ class ProductListView(MethodView):
     # fetch all products
     def get(self):
         """
-         GET request to fetch all products
+        fetch all products
         """
 
         products = product_manager.fetch_all_products()
