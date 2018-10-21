@@ -3,7 +3,13 @@ def is_arg_valid(arg=None):
 
 
 def is_numb_valid(numb=None):
-    return numb is not None and numb != 0
+    return numb is not None and numb != 0 and isinstance(numb, int)
+
+
+def is_currency_valid(currency=None):
+    return currency is not None and currency != 0 and isinstance(
+        currency, int) or isinstance(
+            currency, float)
 
 
 def is_product_input_valid(name, category, quantity, price):
@@ -14,7 +20,7 @@ def is_product_input_valid(name, category, quantity, price):
         message = 'please provide a valid product category'
     elif not is_numb_valid(quantity):
         message = 'please provide a valid product quantity'
-    elif not is_numb_valid(price):
+    elif not is_currency_valid(price):
         message = 'please provide a valid product price'
 
     if message is not None:
