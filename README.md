@@ -1,4 +1,5 @@
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4b1b30fcd784291a315cac009ea40dc)](https://app.codacy.com/app/mkibuuka/store_manager_api_v1?utm_source=github.com&utm_medium=referral&utm_content=mkibuuka/store_manager_api_v1&utm_campaign=Badge_Grade_Settings)
 ## Store Manager_API_V1  [![Maintainability](https://api.codeclimate.com/v1/badges/c4b765fc3ef09ddeadf2/maintainability)](https://codeclimate.com/github/mkibuuka/store_manager_api_v1/maintainability) [![Build Status](https://travis-ci.org/mkibuuka/store_manager_api_v1.svg?branch=fetch_sale_by_id)](https://travis-ci.org/mkibuuka/store_manager_api_v1) [![Coverage Status](https://coveralls.io/repos/github/mkibuuka/store_manager_api_v1/badge.svg?branch=fetch_sale_by_id)](https://coveralls.io/github/mkibuuka/store_manager_api_v1?branch=fetch_sale_by_id)
 
 Store manager API provides an interface for accessing and manupilating product store resources.
