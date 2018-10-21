@@ -1,7 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request
 from flask.views import MethodView
 from flasky.sale.model import Sale
-from flasky.product.model import Product
 from flasky.product.input_validation import is_sale_input_valid
 from flasky.sale.manager import sale_manager
 from flasky.response_helpers import sale_response, response
