@@ -1,5 +1,4 @@
 from tests.fixture import FixtureTest
-from flasky.product.model import Product
 
 
 class TestProductModel(FixtureTest):
