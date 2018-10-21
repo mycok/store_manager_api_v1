@@ -1,4 +1,4 @@
-from flask import make_response, jsonify, url_for
+from flask import make_response, jsonify
 
 
 def response(message, status, status_code):
