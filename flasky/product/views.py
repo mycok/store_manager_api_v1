@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, url_for
+from flask import Blueprint, request
 from flask.views import MethodView
 from flasky.product.model import Product
 from flasky.product.input_validation import is_product_input_valid
