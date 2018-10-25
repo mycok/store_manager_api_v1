@@ -32,4 +32,4 @@ class ProductionConfig(Config):
        variables necessary for production
     """
 
-    DEBUG = True
+    pass
