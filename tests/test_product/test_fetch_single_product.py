@@ -16,7 +16,7 @@ class TestFetchSingleProduct(FixtureTest):
 
             # get product by id
             response = self.client.get(
-                '/api/v1/products/product_id',
+                '/api/v1/products/int(product_id)',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())

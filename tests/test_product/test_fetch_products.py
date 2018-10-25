@@ -4,8 +4,6 @@ from tests.fixture import FixtureTest
 
 
 class TestFetchAllProducts(FixtureTest):
-    """
-    """
     def test_get_all_products(self):
         """
         Test successful GET request to
