@@ -6,6 +6,7 @@ from flasky.config import TestingConfig
 from flasky.product.product_model import Product
 from flasky.sale.sale_model import Sale
 from flasky.product.product_controller import controller
+from flasky.shopping_cart.shopping_cart_model import AddToCart
 
 
 class FixtureTest(TestCase):
@@ -76,3 +77,13 @@ class FixtureTest(TestCase):
         """
         return self.client.get(
              '/api/v1/sales', content_type='application/json')
+
+# shopping cart helper methods
+    def add_product_to_shopping_cart(self):
+        """
+        send a POST request to add a product to cart
+        """
+        return self.client.post(
+           '/api/v1/shopping_cart', content_type='application/json',
+           data=json.dumps(dict(name='macbook air', quantity=4))
+        )
