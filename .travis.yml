@@ -11,6 +11,6 @@ script:
   - py.test --cov
 branches:
   only:
-    - fetch_sale_by_id
+    - shopping_cart
 after_success:
   - coveralls
