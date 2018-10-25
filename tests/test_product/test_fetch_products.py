@@ -1,4 +1,5 @@
 import json
+
 from tests.fixture import FixtureTest
 
 
@@ -21,7 +22,6 @@ class TestFetchAllProducts(FixtureTest):
             self.assertEqual(get_response.status_code, 200)
             self.assertIsInstance(data['products'], list)
             self.assertEqual(data['status'], 'successful')
-            self.assertEqual(data['products'][0]['P_id'], 3)
             self.assertTrue(data['products'][0]['name'], 'macbook air')
 
     def test_try_to_get_all_products_from_an_empty_dict(self):

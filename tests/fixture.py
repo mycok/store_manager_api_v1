@@ -1,10 +1,11 @@
 from unittest import TestCase
 import json
+
 from flasky import create_app
 from flasky.config import TestingConfig
-from flasky.product.model import Product
-from flasky.sale.model import Sale
-from flasky.product.manager import product_manager
+from flasky.product.product_model import Product
+from flasky.sale.sale_model import Sale
+from flasky.product.product_controller import controller
 
 
 class FixtureTest(TestCase):
@@ -15,11 +16,11 @@ class FixtureTest(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.client = self.app.test_client()
-        self.product = Product('macbook air', 'computers/laptops', 3, 1499.0)
+        self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
         self.sale = Sale('kibuuka')
 
     def tearDown(self):
-        product_manager.products.clear()
+        controller.products.clear()
 
     # Product Model helper methods
     def create_product(self):
@@ -57,7 +58,8 @@ class FixtureTest(TestCase):
         """
         return self.client.post(
             '/api/v1/sales', content_type='application/json',
-            data=json.dumps(dict(attendant='michael')))
+            data=json.dumps(
+                dict(attendant='michael')))
 
     def create_sale_without_the_attendant_attribute(self):
         """

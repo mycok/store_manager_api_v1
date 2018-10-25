@@ -1,5 +1,5 @@
 from tests.fixture import FixtureTest
-from flasky.sale.manager import sale_manager
+from flasky.sale.sale_controller import controller
 
 
 class TestSaleManager(FixtureTest):
@@ -8,8 +8,8 @@ class TestSaleManager(FixtureTest):
     """
 
     def test_sale_manager_init(self):
-        self.assertIsInstance(sale_manager.sale_records, dict)
+        self.assertIsInstance(controller.sale_records, dict)
 
     def test_add_new_sale_increases_sale_records_count(self):
-        sale_manager.add_sale_record(self.sale)
-        self.assertEqual(len(sale_manager.sale_records), 3)
+        controller.add_sale_record(self.sale)
+        self.assertEqual(len(controller.sale_records), 3)

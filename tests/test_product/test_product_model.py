@@ -7,7 +7,7 @@ class TestProductModel(FixtureTest):
     """
 
     def test_product_init(self):
-        self.assertEqual(self.product.name, 'macbook air')
+        self.assertEqual(self.product.name, 'macbook')
         self.assertEqual(self.product.category, 'computers/laptops')
         self.assertEqual(self.product.price, 1499.0)
 

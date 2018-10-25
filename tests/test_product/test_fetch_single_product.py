@@ -1,4 +1,5 @@
 import json
+
 from tests.fixture import FixtureTest
 
 
@@ -8,11 +9,14 @@ class TestFetchSingleProduct(FixtureTest):
         # Test successful GET request to fetch a product by id
         with self.client:
             # post a product
-            _ = self.create_product()
+            post_response = self.create_product()
+            post_data = json.loads(post_response.data.decode())
+            product_id = post_data.get('product_id')
+            self.assertIsInstance(product_id, int)
 
             # get product by id
             response = self.client.get(
-                '/api/v1/products/5',
+                '/api/v1/products/product_id',
                 content_type='application/json'
             )
             data = json.loads(response.data.decode())
@@ -30,11 +34,11 @@ class TestFetchSingleProduct(FixtureTest):
 
             # get that question by id
             response = self.client.get(
-                '/api/v1/products/5',
+                '/api/v1/products/3',
                 content_type='application/json'
             )
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(data['status'], 'unsuccessful')
-            self.assertEqual(data['message'], 'product with ID 5 doesnot exist')
+            self.assertEqual(
+                data['message'], 'product with ID 3 doesnot exist')

@@ -1,4 +1,5 @@
 import json
+
 from tests.fixture import FixtureTest
 
 
@@ -30,7 +31,6 @@ class TestCreateSale(FixtureTest):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(data['message'], 'request must be of type json')
-            self.assertEqual(data['status'], 'unsuccessful')
 
     def test_create_sale_without_attendant_attribute(self):
         """
@@ -42,8 +42,9 @@ class TestCreateSale(FixtureTest):
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(data['message'], 'please provide a valid attendant name')
-            self.assertEqual(data['status'], 'unsuccessful')
+            self.assertEqual(
+                data['message'],
+                'please provide a valid attendant name')
 
     def test_cant_create_sale_with_an_empty_string(self):
         """
@@ -59,4 +60,3 @@ class TestCreateSale(FixtureTest):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
                 data['message'], 'please provide a valid attendant name')
-            self.assertEqual(data['status'], 'unsuccessful')

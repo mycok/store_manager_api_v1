@@ -1,5 +1,5 @@
 from tests.fixture import FixtureTest
-from flasky.sale.model import Sale
+from flasky.sale.sale_model import Sale
 
 
 class TestSaleModel(FixtureTest):

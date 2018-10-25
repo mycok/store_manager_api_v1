@@ -1,4 +1,5 @@
 import json
+
 from tests.fixture import FixtureTest
 
 
@@ -27,7 +28,7 @@ class TestFetchSingleSale(FixtureTest):
         a sale with an out of range id index
         """
         with self.client:
-             # post a product
+            # post a product
             _ = self.create_product()
             # post a sale
             _ = self.create_sale()
@@ -40,4 +41,6 @@ class TestFetchSingleSale(FixtureTest):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(data['status'], 'unsuccessful')
-            self.assertEqual(data['message'], 'sale record with ID 10 doesnot exist')
+            self.assertEqual(
+                data['message'],
+                'sale record with ID 10 doesnot exist')
