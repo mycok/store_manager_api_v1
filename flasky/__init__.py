@@ -2,7 +2,7 @@ from flask import Flask
 
 from flasky.config import DevelopmentConfig
 from flasky.product.product_view import products_bp
-from flasky.sale.view import sales_bp
+from flasky.sale.sale_view import sales_bp
 from flasky.shopping_cart.shopping_cart_view import shopping_cart_bp
 
 
