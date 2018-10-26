@@ -12,11 +12,14 @@ class TestCreateSale(FixtureTest):
         with self.client:
             # first create a product to append to a sale
             _ = self.create_product()
+            # add product to cart
+            _ = self.add_product_to_shopping_cart()
             # then create a sale with the appended product
             response = self.create_sale()
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
             self.assertEqual(data['attendant'], 'michael')
+            self.assertEqual(data['total_amount'], 1499.0)
 
     def test_create_sale_with_wrong_content_type(self):
         """
