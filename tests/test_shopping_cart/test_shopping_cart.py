@@ -37,7 +37,7 @@ class TestShoppingCart(FixtureTest):
             self.assertEqual(
                 data['message'], 'please provide a valid product name')
 
-    def test_cant_add_product_invalid_quantity_attribute(self):
+    def test_cant_add_product_with_invalid_quantity_attribute(self):
         # create product
         with self.client:
             _ = self.create_product()
