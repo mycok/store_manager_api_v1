@@ -1,6 +1,6 @@
-from flasky.helper_funcs import search_dict_by_key
-from flasky.helper_funcs import return_all_dict_values
-from flasky.helper_funcs import generate_id
+from flasky.helper_functions import search_dict_by_key
+from flasky.helper_functions import return_all_dict_values
+from flasky.helper_functions import generate_id
 
 
 class Controller:

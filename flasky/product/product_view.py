@@ -49,7 +49,7 @@ class ProductListView(MethodView):
 
         products = controller.fetch_all_products()
         if isinstance(products, str):
-            return response(products, 'unsuccessful', 400)
+            return response(products, 'unsuccessful', 200)
         return all_products_response(
             convert_list_to_json(products), 'successful', 200)
 
