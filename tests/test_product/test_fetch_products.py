@@ -30,5 +30,5 @@ class TestFetchAllProducts(FixtureTest):
         with self.client:
             response = self.get_all_products()
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 200)
             self.assertEqual(data['message'], 'No products available')
