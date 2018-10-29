@@ -56,8 +56,6 @@ class SaleRecordsView(MethodView):
 
 class SaleView(MethodView):
 
-    # class to handle requests with /sales/<int:id>
-
     methods = ['GET']
 
     @classmethod

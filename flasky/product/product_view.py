@@ -57,9 +57,6 @@ class ProductListView(MethodView):
 
 class ProductView(MethodView):
 
-    # class to handle requests to /products/<int:product_id>
-
-
     methods = ['GET']
 
     @classmethod

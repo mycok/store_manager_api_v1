@@ -8,10 +8,7 @@ from flasky.response_helpers import (
     response
     )
 from flasky.auth.user_model_controller import controller
-# from app.auth.invalid_token_manager import token_manager
 from flasky.auth.user_model import User
-# from app.auth.invalid_token_model import InvalidToken
-# from app.auth.auth_helpers import token_required
 from flasky.validator import Validation as v
 
 
