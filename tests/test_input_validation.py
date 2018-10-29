@@ -1,11 +1,11 @@
-from tests.fixture import TestFixture
-from flasky.validator import Validation as v
+# from tests.fixture import TestFixture
+# from flasky.validator import Validation as v
 
 
-class TestInputValidation(TestFixture):
-    """
-    Test input validation function
-    """
+# class TestInputValidation(TestFixture):
+#     """
+#     Test input validation function
+#     """
 
     # def test_product_input_with_missing_name(self):
     #     is_valid = is_product_input_valid(

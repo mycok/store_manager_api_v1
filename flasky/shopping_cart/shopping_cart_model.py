@@ -1,5 +1,4 @@
 from flasky.product.product_controller import controller
-from flasky.helper_functions import search_dict_by_key
 from flasky.helper_functions import parse_product_dict
 
 

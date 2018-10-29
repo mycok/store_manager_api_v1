@@ -6,7 +6,6 @@ from flasky.config import TestingConfig
 from flasky.product.product_model import Product
 from flasky.sale.sale_model import Sale
 from flasky.product.product_controller import controller
-from flasky.shopping_cart.shopping_cart_model import AddToCart
 from flasky.database.postgres import DataBase as db
 
 
