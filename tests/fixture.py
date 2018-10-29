@@ -7,9 +7,10 @@ from flasky.product.product_model import Product
 from flasky.sale.sale_model import Sale
 from flasky.product.product_controller import controller
 from flasky.shopping_cart.shopping_cart_model import AddToCart
+from flasky.database.postgres import DataBase as db
 
 
-class FixtureTest(TestCase):
+class TestFixture(TestCase):
     """
     Test class template for test re-usable objects
     """
@@ -17,10 +18,15 @@ class FixtureTest(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.client = self.app.test_client()
+        self.db = db()
+        self.db.connect('test_database', 'Myko', 1987)
+        self.db.create_db_tables()
         self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
         self.sale = Sale('kibuuka')
 
     def tearDown(self):
+        self.db.drop_tables()
+        self.db.close()
         controller.products.clear()
 
     # Product Model helper methods

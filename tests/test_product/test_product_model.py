@@ -1,7 +1,7 @@
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestProductModel(FixtureTest):
+class TestProductModel(TestFixture):
     """
     Test class for testing product initialisation
     """

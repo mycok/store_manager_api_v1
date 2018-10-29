@@ -1,9 +1,9 @@
 import json
 
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestFetchAllProducts(FixtureTest):
+class TestFetchAllProducts(TestFixture):
     def test_get_all_products(self):
         """
         Test successful GET request to

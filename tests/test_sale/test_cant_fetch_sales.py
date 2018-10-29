@@ -1,8 +1,8 @@
 import json
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestCantFetchAllSales(FixtureTest):
+class TestCantFetchAllSales(TestFixture):
     """
     """
     def test_get_all_sales_from_an_empty_dict(self):

@@ -1,9 +1,9 @@
 import json
 
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestCreateSale(FixtureTest):
+class TestCreateSale(TestFixture):
     """
 
     """

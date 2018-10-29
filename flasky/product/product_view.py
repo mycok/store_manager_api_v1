@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask.views import MethodView
 
 from flasky.product.product_model import Product
-from flasky.product.input_validation import is_product_input_valid
+from flasky.validator import Validation as v
 from flasky.product.product_controller import controller
 from flasky.response_helpers import single_product_response, response
 from flasky.response_helpers import convert_list_to_json, all_products_response
@@ -31,7 +31,7 @@ class ProductListView(MethodView):
         quantity = request_data.get('quantity')
         price = request_data.get('price')
         # validate product object input
-        valid_input = is_product_input_valid(name, category, quantity, price)
+        valid_input = v.validate_product(name, category, quantity, price)
         if not isinstance(valid_input, bool):
             return response(valid_input, 'unsuccessful', 400)
         # create a new product

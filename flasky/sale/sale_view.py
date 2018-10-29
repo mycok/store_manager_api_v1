@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask.views import MethodView
 
 from flasky.sale.sale_model import Sale
-from flasky.product.input_validation import is_sale_input_valid
+from flasky.validator import Validation as v
 from flasky.sale.sale_controller import controller
 from flasky.shopping_cart.shopping_cart_model import AddToCart as cart
 from flasky.response_helpers import single_sale_response, response
@@ -29,7 +29,7 @@ class SaleRecordsView(MethodView):
         request_data = request.get_json()
         attendant = request_data.get('attendant')
         # validate sale object input
-        valid_sale_input = is_sale_input_valid(attendant)
+        valid_sale_input = v.validate_sale(attendant)
         if not isinstance(valid_sale_input, bool):
             return response(valid_sale_input, 'unsuccessful', 400)
         # create a new sale
@@ -55,7 +55,7 @@ class SaleRecordsView(MethodView):
 
 class SaleView(MethodView):
     """
-    A method view class to handle requests with /sales/<int:id>
+    class to handle requests with /sales/<int:id>
     endpoint
     """
 

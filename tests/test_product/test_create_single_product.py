@@ -1,8 +1,8 @@
 import json
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestCreateProduct(FixtureTest):
+class TestCreateProduct(TestFixture):
 
     def test_create_a_product(self):
         # Test successful POST request to create a product

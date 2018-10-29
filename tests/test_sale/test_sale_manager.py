@@ -1,8 +1,8 @@
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 from flasky.sale.sale_controller import controller
 
 
-class TestSaleManager(FixtureTest):
+class TestSaleManager(TestFixture):
     """
     Test sale manager initialisation
     """

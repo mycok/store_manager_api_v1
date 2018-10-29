@@ -1,9 +1,9 @@
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 from flasky import config
 from flasky import create_app
 
 
-class TestConfiguration(FixtureTest):
+class TestConfiguration(TestFixture):
     """
     Test class for application configurations
     """

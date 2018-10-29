@@ -1,8 +1,8 @@
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 from flasky.sale.sale_model import Sale
 
 
-class TestSaleModel(FixtureTest):
+class TestSaleModel(TestFixture):
     """
     Test sale object initialisation
     """

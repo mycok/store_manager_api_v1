@@ -1,8 +1,8 @@
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 from flasky.product.product_controller import controller
 
 
-class TestProductManager(FixtureTest):
+class TestProductManager(TestFixture):
     """
     Test class for testing product manager class
     """

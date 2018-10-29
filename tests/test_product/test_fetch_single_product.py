@@ -1,9 +1,9 @@
 import json
 
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestFetchSingleProduct(FixtureTest):
+class TestFetchSingleProduct(TestFixture):
     def test_cant_fetch_product_with_out_of_range_index(self):
         """
         Test unsuccessful GET request to fetch

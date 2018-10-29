@@ -1,9 +1,9 @@
 import json
 
-from tests.fixture import FixtureTest
+from tests.fixture import TestFixture
 
 
-class TestShoppingCart(FixtureTest):
+class TestShoppingCart(TestFixture):
     def test_add_product_to_cart(self):
         # create product
         with self.client:

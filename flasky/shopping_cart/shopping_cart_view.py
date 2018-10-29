@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask.views import MethodView
 
-from flasky.product.input_validation import is_valid_shopping_cart_product
+from flasky.validator import Validation as v
 from flasky.shopping_cart.shopping_cart_model import AddToCart as cart
 from flasky.response_helpers import response
 
@@ -26,7 +26,7 @@ class ShoppingCartView(MethodView):
         product_name = request_data.get('name')
         product_quantity = request_data.get('quantity')
         # validate product object input
-        valid_input = is_valid_shopping_cart_product(
+        valid_input = v.validate_shopping_cart_product(
             product_name, product_quantity)
         if not isinstance(valid_input, bool):
             return response(valid_input, 'unsuccessful', 400)
