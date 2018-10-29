@@ -13,14 +13,14 @@ sales_bp = Blueprint('sales', __name__, url_prefix='/api/v1')
 
 
 class SaleRecordsView(MethodView):
-    """
-    A method view class to handle requests with the /sales endpoint
-    """
+
+    # A method view class to handle requests with the /sales endpoint
 
     methods = ['POST', 'GET']
 
     # create a sale
-    def post(self):
+    @classmethod
+    def post(cls):
         # check for a valid content type
         if not request.content_type == 'application/json':
             return response(
@@ -45,7 +45,8 @@ class SaleRecordsView(MethodView):
         return single_sale_response(new_sale, 'successful', 201)
 
     # fetch all sales
-    def get(self):
+    @classmethod
+    def get(cls):
         sales = controller.fetch_all_sale_records()
         if not isinstance(sales, list):
             return response(sales, 'unsuccessful', 400)
@@ -54,14 +55,13 @@ class SaleRecordsView(MethodView):
 
 
 class SaleView(MethodView):
-    """
-    class to handle requests with /sales/<int:id>
-    endpoint
-    """
+
+    # class to handle requests with /sales/<int:id>
 
     methods = ['GET']
 
-    def get(self, sale_id):
+    @classmethod
+    def get(cls, sale_id):
         # GET request to fetch a sale by id
         sale = controller.fetch_sale_record(sale_id)
         if not isinstance(sale, Sale):

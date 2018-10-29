@@ -12,14 +12,14 @@ products_bp = Blueprint('products', __name__, url_prefix='/api/v1')
 
 
 class ProductListView(MethodView):
-    """
-    A method view class to handle requests with the /products endpoint
-    """
+
+    # class to handle requests to /products endpoint
 
     methods = ['POST', 'GET']
 
     # create a product
-    def post(self):
+    @classmethod
+    def post(cls):
         # check for a valid content type
         if not request.content_type == 'application/json':
             return response('request must be of type json',
@@ -45,7 +45,8 @@ class ProductListView(MethodView):
         return single_product_response(new_product, 'successful', 201)
 
     # fetch all products
-    def get(self):
+    @classmethod
+    def get(cls):
 
         products = controller.fetch_all_products()
         if isinstance(products, str):
@@ -55,14 +56,14 @@ class ProductListView(MethodView):
 
 
 class ProductView(MethodView):
-    """
-    A method view class to handle requests with
-    /products/<int:product_id> endpoint
-    """
+
+    # class to handle requests to /products/<int:product_id>
+
 
     methods = ['GET']
 
-    def get(self, product_id):
+    @classmethod
+    def get(cls, product_id):
         # GET request to fetch a product by id
         product = controller.fetch_product_by_id(product_id)
         if not isinstance(product, Product):

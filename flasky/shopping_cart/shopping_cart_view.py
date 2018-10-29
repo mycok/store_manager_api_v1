@@ -16,7 +16,8 @@ class ShoppingCartView(MethodView):
     methods = ['POST']
 
     # post a product name to add to cart
-    def post(self):
+    @classmethod
+    def post(cls):
         # check for a valid content type
         if not request.content_type == 'application/json':
             return response('request must be of type json',

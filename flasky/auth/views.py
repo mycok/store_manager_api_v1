@@ -1,12 +1,11 @@
-from flask import Blueprint, jsonify, request
+from flask import (Blueprint, request, abort)
 from flask.views import MethodView
 
 from flasky.auth.auth_helper_functions import (
-    response_for_get_all_users, auth_success_response,
-    convert_user_tuple_to_list
+    response_for_get_all_users, auth_success_response
     )
 from flasky.response_helpers import (
-    response, convert_list_to_json
+    response
     )
 from flasky.auth.user_model_controller import controller
 # from app.auth.invalid_token_manager import token_manager
@@ -25,9 +24,10 @@ class SignUp(MethodView):
     """
     methods = ['POST', 'GET']
 
-    def post(self):
+    @classmethod
+    def post(cls):
         if not request.content_type == 'application/json':
-            return response('request must be of type json', 'unsuccessful', 400)
+            abort(400)
 
         sent_data = request.get_json()
         username = sent_data.get('username')
@@ -56,12 +56,12 @@ class Login(MethodView):
     """
 
     """
-
-    def post(self):
+    @classmethod
+    def post(cls):
         """[summary]
         """
         if not request.content_type == 'application/json':
-            return response('request must be of type json', 'failed', 400)
+            abort(400)
 
         sent_data = request.get_json()
         email = sent_data.get('email')
