@@ -98,16 +98,6 @@ class DataBase:
             print('Failed to fetch table row data {}'.format(error))
 
     @classmethod
-    def fetch_many(cls, query):
-        try:
-            cls.cursor.execute(query)
-            return cls.cursor.fetch_many()
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
-            print('Failed to fetch table row data {}'.format(error))
-
-    @classmethod
     def fetch_all(cls, query):
         try:
             cls.cursor.execute(query)
