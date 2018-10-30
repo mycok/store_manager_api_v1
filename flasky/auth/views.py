@@ -1,14 +1,15 @@
-from flask import (Blueprint, request, abort)
+from flask import (Blueprint, request, abort, url_for)
 from flask.views import MethodView
 
 from flasky.auth.auth_helper_functions import (
-    response_for_get_all_users, auth_success_response
+    auth_success_response, create_user_response
     )
-from flasky.response_helpers import (
-    response
-    )
-from flasky.auth.user_model_controller import controller
+from flasky.response_helpers import response
+from flasky.auth.user_model_controller import UserController as controller
+from flasky.auth.invalid_token_controller import TokenController
+
 from flasky.auth.user_model import User
+from flasky.auth.invalid_token_model import InvalidToken
 from flasky.validator import Validation as v
 
 
@@ -16,10 +17,8 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/v1')
 
 
 class SignUp(MethodView):
-    """
 
-    """
-    methods = ['POST', 'GET']
+    methods = ['POST']
 
     @classmethod
     def post(cls):
@@ -45,18 +44,17 @@ class SignUp(MethodView):
 
         controller.create_user(new_user)
 
-        return response(
-            new_user.username + ' has signed up', 'success', 201)
+        return create_user_response(
+            new_user, url_for('auth.register', email=new_user.email))
 
 
 class Login(MethodView):
-    """
 
-    """
+    methods = ['POST']
+
     @classmethod
     def post(cls):
-        """[summary]
-        """
+
         if not request.content_type == 'application/json':
             abort(400)
 
@@ -66,7 +64,7 @@ class Login(MethodView):
 
         is_input_valid = v.validate_user_login(email=email, password=password)
         if not isinstance(is_input_valid, bool):
-            return response(is_input_valid, 'unsuccessful', 400)
+            return response(is_input_valid, 'unsuccessful', 401)
 
         existing_user = controller.check_if_user_exists(email)
         if existing_user is None:
@@ -85,11 +83,46 @@ class Login(MethodView):
            existing_user['username'] + ' is now logged in', token)
 
 
+class Logout(MethodView):
+
+    methods = ['POST']
+
+    @classmethod
+    def post(cls):
+
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return response(
+                'Provide an authorization header', 'unsuccessful', 403)
+        try:
+            auth_token = auth_header.split(" ")[1]
+
+        except IndexError:
+            return response('unable to extract token', 'unsuccessful', 403)
+        else:
+            decoded_token_response = User.decode_auth_token(auth_token)
+
+            if not isinstance(decoded_token_response, int):
+                return response(decoded_token_response, 'unsuccessful', 401)
+            is_token_invalid = TokenController.check_if_token_exists(
+                auth_token)
+
+            if isinstance(is_token_invalid, list):
+                return response(
+                    'token already invalidated', 'unsuccessful', 400)
+            token = InvalidToken(auth_token)
+
+            TokenController.save_invalid_token(token)
+            return response('successfully logged out', 'success', 200)
+
+
 # Register a class as a view
 signup = SignUp.as_view('register')
 login = Login.as_view('login')
+logout = Logout.as_view('logout')
 
 
 # Add url_rules for the API endpoints
 auth_bp.add_url_rule('/auth/signup', view_func=signup)
 auth_bp.add_url_rule('/auth/login', view_func=login)
+auth_bp.add_url_rule('/auth/logout', view_func=logout)
