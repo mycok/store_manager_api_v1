@@ -9,21 +9,9 @@ def auth_success_response(message, token):
         'token': token.decode('utf-8')
     })), 200
 
-
-def response_for_get_all_users(users, status_code):
+def create_user_response(user, resource_url):
     return make_response(jsonify({
-        'status': 'success',
-        'users': users
-    })), status_code
-
-
-def convert_user_tuple_to_list(tup):
-    """
-    converts a list to json
-    Arguments:
-        lst -- list of objects
-    """
-
-    lst = list(tup)
-    # lst.pop(0)
-    return lst
+        'message': '{} has signed up'.format(user.username),
+        'status': 'successful',
+        'resource_link': resource_url
+    })), 201
