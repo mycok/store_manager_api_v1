@@ -5,7 +5,7 @@ import jwt
 from flasky.helper_functions import generate_id
 
 
-class User(object):
+class User:
 
     # A class that defines a user object
 
