@@ -1,3 +1,6 @@
+from flasky.helper_functions import generate_id
+
+
 class Sale(object):
     """
     class that defines a sale object
@@ -5,7 +8,7 @@ class Sale(object):
 
     def __init__(self, attendant):
         super(Sale, self).__init__()
-        self.sale_id = 0
+        self.sale_id = generate_id()
         self.products = []
         self.attendant = attendant
         self.total_products = 0

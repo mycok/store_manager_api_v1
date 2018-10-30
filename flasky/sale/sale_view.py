@@ -1,12 +1,13 @@
-from flask import Blueprint, request
+from flask import (Blueprint, request, url_for)
 from flask.views import MethodView
 
 from flasky.sale.sale_model import Sale
 from flasky.validator import Validation as v
 from flasky.sale.sale_controller import controller
 from flasky.shopping_cart.shopping_cart_model import AddToCart as cart
-from flasky.response_helpers import single_sale_response, response
-from flasky.response_helpers import convert_list_to_json, all_sales_response
+from flasky.response_helpers import (single_sale_response,
+                                     response, create_sale_response,
+                                     convert_list_to_json, all_sales_response)
 
 
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/v1')
@@ -42,7 +43,7 @@ class SaleRecordsView(MethodView):
         # save new sale object
         controller.add_sale_record(new_sale)
         # return response with a new sale
-        return single_sale_response(new_sale, 'successful', 201)
+        return single_sale_response(new_sale, 201)
 
     # fetch all sales
     @classmethod
@@ -64,7 +65,7 @@ class SaleView(MethodView):
         sale = controller.fetch_sale_record(sale_id)
         if not isinstance(sale, Sale):
             return response(sale, 'unsuccessful', 400)
-        return single_sale_response(sale, 'successful', 200)
+        return single_sale_response(sale, 200)
 
 
 # Register a class as a view
