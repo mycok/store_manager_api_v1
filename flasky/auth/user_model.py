@@ -6,9 +6,8 @@ from flasky.helper_functions import generate_id
 
 
 class User(object):
-    """
-    A class that defines a user object
-    """
+
+    # A class that defines a user object
 
     def __init__(self, username, role, email, password):
         self.user_id = generate_id()
