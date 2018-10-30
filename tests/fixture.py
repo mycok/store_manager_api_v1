@@ -6,7 +6,6 @@ from flasky.config import TestingConfig
 from flasky.product.product_model import Product
 from flasky.sale.sale_model import Sale
 from flasky.product.product_controller import controller
-from flasky.database.postgres import DataBase as db
 
 
 class TestFixture(TestCase):
@@ -17,15 +16,10 @@ class TestFixture(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.client = self.app.test_client()
-        self.db = db()
-        self.db.connect('test_database', 'Myko', 1987)
-        self.db.create_db_tables()
         self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
         self.sale = Sale('kibuuka')
 
     def tearDown(self):
-        self.db.drop_tables()
-        self.db.close()
         controller.products.clear()
 
     # Product Model helper methods
@@ -35,8 +29,8 @@ class TestFixture(TestCase):
         """
         return self.client.post(
             '/api/v1/products', content_type='application/json',
-            data=json.dumps(dict(name='macbook air',
-                            category='computers/laptops',
+            data=json.dumps(dict(name='macbookair',
+                            category='computers',
                             quantity=4, price=1499.0)))
 
     def create_product_with_missing_attributes(self):
@@ -46,7 +40,7 @@ class TestFixture(TestCase):
         """
         return self.client.post(
             '/api/v1/products', content_type='application/json',
-            data=json.dumps(dict(name='macbook air',
+            data=json.dumps(dict(name='Lenovo',
                             category='computers/laptops',
                             price=1499.0)))
 
@@ -90,5 +84,5 @@ class TestFixture(TestCase):
         """
         return self.client.post(
            '/api/v1/shopping_cart', content_type='application/json',
-           data=json.dumps(dict(name='macbook air', quantity=4))
+           data=json.dumps(dict(name='macbookair', quantity=4))
         )
