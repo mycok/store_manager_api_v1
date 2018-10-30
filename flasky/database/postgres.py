@@ -40,11 +40,16 @@ class DataBase:
         """creates all the tables for the db"""
 
         users = """CREATE TABLE IF NOT EXISTS users
-                (user_id BIGINT, username VARCHAR(255),
+                (user_id UUID, username VARCHAR(255),
                 role VARCHAR(255), email VARCHAR(255) UNIQUE, password VARCHAR(255),
                 created_timestamp TIMESTAMP DEFAULT NOW())
                 """
+
+        invalidtoken = """CREATE TABLE IF NOT EXISTS invalidtoken
+                        (token_id SERIAL PRIMARY KEY, token VARCHAR(255))
+                       """
         cls.cursor.execute(users)
+        cls.cursor.execute(invalidtoken)
         cls.connection.commit()
 
     @classmethod
@@ -62,8 +67,6 @@ class DataBase:
         except (Exception, psycopg2.DatabaseError) as error:
             cls.connection.rollback()
             print('Failed to insert data into table {}'.format(error))
-        finally:
-            cls.close()
 
     @classmethod
     def check(cls, select_query):
@@ -74,8 +77,6 @@ class DataBase:
             if cls.connection:
                 cls.connection.rollback()
             print('Failed to select table data {}'.format(error))
-        finally:
-            cls.close()
 
     @classmethod
     def update(cls, update_query):
@@ -123,3 +124,6 @@ class DataBase:
         if cls.connection:
             cls.cursor.close()
             cls.connection.close()
+
+# create an instance of the database
+db = DataBase()
