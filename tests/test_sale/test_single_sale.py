@@ -13,11 +13,13 @@ class TestFetchSingleSale(TestFixture):
             # post a product
             _ = self.create_product()
             # post a sale
-            _ = self.create_sale()
+            response = self.create_sale()
+            data = json.loads(response.data.decode())
+            sale_id = data['sale_id']
 
-            # get salet by id
+            # get sale by id
             response = self.client.get(
-                '/api/v1/sales/3',
+                '/api/v1/sales/{}'.format(sale_id),
                 content_type='application/json'
             )
             self.assertEqual(response.status_code, 200)

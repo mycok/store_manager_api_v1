@@ -44,7 +44,7 @@ class TestShoppingCart(TestFixture):
         # add product to shopping cart
             response = self.client.post(
                 '/api/v1/shopping_cart', content_type='application/json',
-                data=json.dumps(dict(name='macbook air', quantity=None))
+                data=json.dumps(dict(name='macbookair', quantity=None))
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
@@ -57,9 +57,9 @@ class TestShoppingCart(TestFixture):
             # add product to shopping cart
             response = self.client.post(
                 '/api/v1/shopping_cart', content_type='application/json',
-                data=json.dumps(dict(name='macbook air', quantity=3))
+                data=json.dumps(dict(name='macbookair', quantity=3))
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
-                data['message'], 'product macbook air doesnot exist')
+                data['message'], 'product macbookair doesnot exist')
