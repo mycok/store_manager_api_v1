@@ -9,8 +9,7 @@ class Validation:
 
     @classmethod
     def is_arg_string(cls, arg=None):
-        return (isinstance(arg, str) and
-                not arg.isdigit() and arg.isalpha())
+        return (isinstance(arg, str) and arg.isalpha())
 
     @classmethod
     def is_valid_string(cls, arg=None):
@@ -41,11 +40,11 @@ class Validation:
         if not cls.is_valid_string(args[0]):
             message = (
                 'product name should contain atleast three characters, '
-                'no spaces and no numbers')
+                'and no numbers')
         elif not cls.is_valid_string(args[1]):
             message = (
                 'product category should contain atleast three characters, '
-                'no spaces and no numbers')
+                'and no numbers')
         elif not cls.is_valid_numb(args[2]):
             message = 'quantity should be a number greater than zero'
         elif not cls.is_valid_currency(args[3]):
