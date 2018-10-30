@@ -50,7 +50,7 @@ class TestCreateProduct(TestFixture):
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
-            self.assertEqual(data['message'], 'product category should contain atleast three characters, and no numbers')
+            self.assertEqual(data['message'], 'quantity should be a number greater than zero')
             self.assertEqual(data['status'], 'unsuccessful')
 
     def test_cant_create_product_with_an_empty_string(self):
