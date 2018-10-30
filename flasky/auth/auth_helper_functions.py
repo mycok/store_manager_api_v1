@@ -9,6 +9,7 @@ def auth_success_response(message, token):
         'token': token.decode('utf-8')
     })), 200
 
+
 def create_user_response(user, resource_url):
     return make_response(jsonify({
         'message': '{} has signed up'.format(user.username),
