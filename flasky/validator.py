@@ -9,7 +9,7 @@ class Validation:
 
     @classmethod
     def is_arg_string(cls, arg=None):
-        return (isinstance(arg, str) and arg.isalpha())
+        return isinstance(arg, str) and not arg.isdigit()
 
     @classmethod
     def is_valid_string(cls, arg=None):
