@@ -52,20 +52,11 @@ def token_required(f):
                     'token blacklisted, please login again', 'unsuccessful',
                     401)
             decoded_response = User.decode_auth_token(token)
-            print(decoded_response)
             user = controller.fetch_user_by_id(decoded_response)
-            print(user)
             current_user = User(
                 username=user['username'], role=user['role'],
                 email=user['email'], password=user['password_hash']
                 )
-
-            print(current_user)
-            print(current_user.role)
-            print(current_user.username)
-            print(current_user.email)
-            print(current_user.password_hash)
-
         except:
             # if the token has been already used to logout which
             # makes it invalid, the function will raise an error
