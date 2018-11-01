@@ -14,14 +14,15 @@ def create_app(config_name=None):
     # configure app
     if config_name is not None:
         app.config.from_object(config_name)
-    app.config.from_object(DevelopmentConfig)
+    else:
+        app.config.from_object(DevelopmentConfig)
+        # database setup
+        db.connect('my_store', 'Myko', '1987')
+        db.create_db_tables()
     # register blueprints
     app.register_blueprint(products_bp)
     app.register_blueprint(sales_bp)
     app.register_blueprint(shopping_cart_bp)
     app.register_blueprint(auth_bp)
-    # database setup
-    db.connect('rides', 'Myko', '1987')
-    db.create_db_tables()
 
     return app
