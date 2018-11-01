@@ -1,4 +1,4 @@
--- CREATE TYPE DESCP AS ENUM ('Admin', 'Attendant');
+CREATE TYPE DESCP AS ENUM ('Admin', 'Attendant');
 
 
 CREATE TABLE IF NOT EXISTS users (
