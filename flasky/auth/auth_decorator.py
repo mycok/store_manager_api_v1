@@ -42,33 +42,30 @@ def token_required(f):
                 'message': 'Missing a token'
             })), 401
 
-        try:
-            # call the token decode method of the user model
-            # to get the initial user_id in order extract the
-            # right user from the user table in the database
-            blacklisted_token = TokenController.check_if_token_exists(token)
-            if isinstance(blacklisted_token, list):
-                return response(
-                    'token blacklisted, please login again', 'unsuccessful',
-                    401)
-            decoded_response = User.decode_auth_token(token)
-            user = controller.fetch_user_by_id(decoded_response)
-            current_user = User(
-                username=user['username'], role=user['role'],
-                email=user['email'], password=user['password_hash']
-                )
-        except:
-            # if the token has been already used to logout which
-            # makes it invalid, the function will raise an error
-            message = 'Invalid token'
-            if isinstance(decoded_response, str):
-                message = decoded_response
-            return make_response(jsonify({
-                'status': 'Failed to extract user_id',
-                'message': message
-            })), 401
+        # call the token decode method of the user model
+        # to get the initial user_id in order extract the
+        # right user from the user table in the database
+        blacklisted_token = TokenController.check_if_token_exists(
+            token)
+        if isinstance(blacklisted_token, dict):
+            return response(
+                'token blacklisted, please login again', 'unsuccessful', 401)
+        decoded_response = User.decode_auth_token(token)
+        user = controller.fetch_user_by_id(decoded_response)
+        current_user = User(
+            username=user['username'], role=user['role'],
+            email=user['email'], password=user['password']
+            )
         # extract the user from the
         # db and assign that user as an argument in the returned function
         return f(current_user, *args, **kwargs)
 
     return decorated_function
+
+
+def is_admin_role(role):
+    return role == 'Admin'
+
+
+def is_attendant_role(role):
+    return role == 'Attendant'
