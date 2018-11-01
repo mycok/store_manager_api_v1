@@ -1,0 +1,5 @@
+
+CREATE TABLE IF NOT EXISTS invalidtokens (
+  token_id SERIAL PRIMARY KEY,
+  token VARCHAR(255) DEFAULT NULL
+);
