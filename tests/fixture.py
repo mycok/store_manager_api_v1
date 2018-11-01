@@ -18,7 +18,7 @@ class TestFixture(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.db = DataBase()
-        self.db.connect('test_database', 'Myko', '1987')
+        self.db.connect('postgres', 'postgres', '1987')
         self.db.create_db_tables()
         self.client = self.app.test_client()
         self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
