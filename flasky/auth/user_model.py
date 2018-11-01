@@ -47,7 +47,7 @@ class User:
         token
 
         Arguments:
-            email  -- users email
+            user_id  -- users id
         """
         try:
             payload = {
@@ -79,7 +79,6 @@ class User:
                 token, 'awesomenessisforever', algorithm='HS256')
 
             ids = payload['sub']
-            print(ids)
             return ids
 
         except jwt.ExpiredSignatureError:
@@ -94,5 +93,6 @@ class User:
             "username": self.username,
             "email": self.email,
             "password": self.password_hash,
-            "created_at": self.created_timestamp
+            "role": self.role,
+            "created_at": self.created_timestamp,
         }
