@@ -7,9 +7,9 @@ install:
   - pip install pytest pytest-cov
   - pip install coveralls
 before_script:
-  - psql -c "CREATE DATABASE test_database;" -U Myko
-  - psql -c "CREATE USER Myko WITH PASSWORD '1987';" -U Myko
-  - psql -c "GRANT ALL PRIVILEGES ON DATABASE test_database TO Myko;" -U Myko
+  - psql -c 'CREATE DATABASE test_database;' -U Myko
+  - psql -c 'CREATE USER Myko WITH PASSWORD '1987'; -U Myko
+  - psql -c 'GRANT ALL PRIVILEGES ON DATABASE test_database TO Myko;' -U Myko
 script:
   - py.test
   - py.test --cov
