@@ -35,19 +35,19 @@ class Validation:
         return re.match(r"\w+@[a-zA-Z_]+?\.[a-zA-Z]", email)
 
     @classmethod
-    def validate_product(cls, *args):
+    def validate_product(cls, **kwargs):
         message = None
-        if not cls.is_valid_string(args[0]):
+        if not cls.is_valid_string(kwargs['name']):
             message = (
                 'product name should contain atleast three characters, '
                 'and no numbers')
-        elif not cls.is_valid_string(args[1]):
+        elif not cls.is_valid_string(kwargs['category']):
             message = (
                 'product category should contain atleast three characters, '
                 'and no numbers')
-        elif not cls.is_valid_numb(args[2]):
+        elif not cls.is_valid_numb(kwargs['quantity']):
             message = 'quantity should be a number greater than zero'
-        elif not cls.is_valid_currency(args[3]):
+        elif not cls.is_valid_currency(kwargs['price']):
             message = 'price should be a number greater than zero'
 
         if message is not None:
