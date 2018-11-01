@@ -6,6 +6,15 @@ install:
   - pip install -r requirements.txt
   - pip install pytest pytest-cov
   - pip install coveralls
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+postgres:
+  adapter: postgresql
+  database: postgres
+  username: postgres
+  password: 1987
 before_script:
   # - psql -c 'CREATE DATABASE postgres;' -U postgres
   - psql -c 'CREATE USER postgres WITH PASSWORD '1987'; -U postgres
@@ -16,9 +25,6 @@ script:
 branches:
   only:
     - ap1-v3-ft-#161573359-signup-login-logout
-services:
-  - postgresql
-addons:
-  postgresql: "9.4"
+
 after_success:
   - coveralls
