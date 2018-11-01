@@ -26,6 +26,7 @@ class DataBase:
         try:
             cls.connection = psycopg2.connect(
                 dbname=args[0], user=args[1], password=args[2])
+
             cls.cursor = cls.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)
             print("...connected....")
