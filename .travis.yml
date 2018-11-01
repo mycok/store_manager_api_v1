@@ -7,7 +7,7 @@ install:
   - pip install pytest pytest-cov
   - pip install coveralls
 before_script:
-  - psql -c 'CREATE DATABASE postgres;' -U postgres
+  # - psql -c 'CREATE DATABASE postgres;' -U postgres
   - psql -c 'CREATE USER postgres WITH PASSWORD '1987'; -U postgres
   - psql -c 'GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;' -U postgres
 script:
