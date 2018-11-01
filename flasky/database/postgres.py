@@ -27,35 +27,46 @@ class DataBase:
             cls.connection = psycopg2.connect(
                 dbname=args[0], user=args[1], password=args[2])
             cls.cursor = cls.connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor)
+                cursor_factory=psycopg2.extras.RealDictCursor)
             print("...connected....")
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             cls.connection.rollback()
             cls.connection.commit()
             print('Failed to connect to the database {}'.format(error))
 
     @classmethod
     def create_db_tables(cls):
-        """creates all the tables for the db"""
+        token_file = "flasky/database/invalid_token_table.sql"
+        users_file = "flasky/database/users_table.sql"
+        product_file = "flasky/database/products_table.sql"
 
-        users = """CREATE TABLE IF NOT EXISTS users
-                (user_id UUID, username VARCHAR(255),
-                role VARCHAR(255), email VARCHAR(255) UNIQUE, password VARCHAR(255),
-                created_timestamp TIMESTAMP DEFAULT NOW())
-                """
+        token_sql = open(token_file, mode='r', encoding='utf-8').read()
+        users_sql = open(users_file, mode='r', encoding='utf-8').read()
+        product_sql = open(product_file, mode='r', encoding='utf-8').read()
 
-        invalidtoken = """CREATE TABLE IF NOT EXISTS invalidtoken
-                        (token_id SERIAL PRIMARY KEY, token VARCHAR(255))
-                       """
-        cls.cursor.execute(users)
-        cls.cursor.execute(invalidtoken)
+        cls.cursor.execute(users_sql)
+        cls.connection.commit()
+
+        cls.cursor.execute(product_sql)
+        cls.connection.commit()
+
+        cls.cursor.execute(token_sql)
         cls.connection.commit()
 
     @classmethod
     def drop_tables(cls):
         users = "DROP TABLE IF EXISTS users CASCADE"
+        products = "DROP TABLE IF EXISTS products CASCADE"
+        invalidtokens = "DROP TABLE IF EXISTS invalidtokens CASCADE"
+
         cls.cursor.execute(users)
+        cls.connection.commit()
+
+        cls.cursor.execute(products)
+        cls.connection.commit()
+
+        cls.cursor.execute(invalidtokens)
         cls.connection.commit()
         print('...dropped...')
 
@@ -64,7 +75,7 @@ class DataBase:
         try:
             cls.cursor.execute(insert_query, values)
             cls.connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             cls.connection.rollback()
             print('Failed to insert data into table {}'.format(error))
 
@@ -73,7 +84,7 @@ class DataBase:
         try:
             cls.cursor.execute(select_query)
             return cls.cursor.fetchone()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             if cls.connection:
                 cls.connection.rollback()
             print('Failed to select table data {}'.format(error))
@@ -83,27 +94,28 @@ class DataBase:
         try:
             cls.cursor.execute(update_query)
             cls.connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
+            return cls.cursor.rowcount
+        except (Exception) as error:
             if cls.connection:
                 cls.connection.rollback()
             print('Failed to update table data {}'.format(error))
 
     @classmethod
-    def fetch_one(cls, query):
+    def fetch_one(cls, fetch_one_query):
         try:
-            cls.cursor.execute(query)
+            cls.cursor.execute(fetch_one_query)
             return cls.cursor.fetchone()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             if cls.connection:
                 cls.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
 
     @classmethod
-    def fetch_all(cls, query):
+    def fetch_all(cls, fetch_all_query):
         try:
-            cls.cursor.execute(query)
+            cls.cursor.execute(fetch_all_query)
             return cls.cursor.fetchall()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             if cls.connection:
                 cls.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
@@ -114,7 +126,7 @@ class DataBase:
             cls.cursor.execute(delete_query)
             cls.connection.commit()
             return cls.cursor.rowcount
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (Exception) as error:
             if cls.connection:
                 cls.connection.rollback()
         print('Failed to delete table row data {}'.format(error))
