@@ -1,4 +1,4 @@
-from flasky.product.product_controller import controller
+from flasky.product.product_controller import Controller
 from flasky.helper_functions import parse_product_dict
 
 
