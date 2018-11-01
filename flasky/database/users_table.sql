@@ -1,4 +1,4 @@
-CREATE TYPE DESCP AS ENUM ('Admin', 'Attendant');
+-- CREATE TYPE DESCP AS ENUM ('Admin', 'Attendant');
 
 
 CREATE TABLE IF NOT EXISTS users (
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(255) DEFAULT NULL,
   email VARCHAR(255) DEFAULT NULL,
   password VARCHAR(255) DEFAULT NULL,
-  role DESCP DEFAULT 'Admin',
+  role VARCHAR(255) DEFAULT 'Admin',
   created_timestamp TIMESTAMP DEFAULT NOW()
 );
 
