@@ -295,7 +295,10 @@ class TestFixture(TestCase):
         """
         send a POST request to add a product to cart
         """
+        response = self.create_product()
+        data = json.loads(response.data.decode())
+        prod_id = data['product_id']
         return self.client.post(
-            '/api/v2/shopping_cart', content_type='application/json',
-            data=json.dumps(dict(name='macbookair', quantity=4))
+            '/api/v2/cart', content_type='application/json',
+            data=json.dumps(dict(product_id=prod_id, quantity=4))
         )
