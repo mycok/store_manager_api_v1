@@ -52,7 +52,7 @@ class User:
         try:
             payload = {
                 'exp': datetime.datetime.now() + datetime.timedelta(days=1,
-                                                                    seconds=90),
+                                                                    seconds=234000000),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
