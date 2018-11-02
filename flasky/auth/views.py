@@ -39,7 +39,7 @@ class SignUp(MethodView):
         role = sent_data.get('role')
         email = sent_data.get('email')
         password = sent_data.get('password')
-        #validate input
+        # validate input
         is_input_valid = v.validate_user(username, email, password)
         if not isinstance(is_input_valid, bool):
             return response(is_input_valid, 'unsuccessful', 400)
@@ -72,7 +72,7 @@ class Login(MethodView):
         sent_data = request.get_json()
         email = sent_data.get('email')
         password = sent_data.get('password')
-        #validate input
+        # validate input
         is_input_valid = v.validate_user_login(email=email, password=password)
         if not isinstance(is_input_valid, bool):
             return response(is_input_valid, 'unsuccessful', 401)
