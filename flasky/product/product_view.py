@@ -25,17 +25,17 @@ class ProductListView(MethodView):
 
     methods = ['POST', 'GET']
 
-    # decorators = [token_required]
+    decorators = [token_required]
 
     # create a product
     @classmethod
-    def post(cls):
+    def post(cls, current_user):
         # check for a valid content type
         if not request.content_type == 'application/json':
             return response('request must be of type json',
                             'unsuccessful', 400)
-        # if not is_admin_role(current_user.role):
-        #     return response('Admin previllages required', 'unsuccessful', 401)
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
 
         # extract request data
         request_data = request.get_json()
@@ -61,7 +61,7 @@ class ProductListView(MethodView):
 
     # fetch all products
     @classmethod
-    def get(cls):
+    def get(cls, current_user):
 
         products = Controller.fetch_all_products()
         if isinstance(products, str):
@@ -77,10 +77,10 @@ class ProductView(MethodView):
 
     methods = ['GET', 'PUT', 'DELETE']
 
-    # decorators = [token_required]
+    decorators = [token_required]
 
     @classmethod
-    def get(cls, product_id):
+    def get(cls, current_user, product_id):
         # GET request to fetch a product by id
         product = Controller.fetch_product_by_id(product_id)
         if not isinstance(product, dict):
@@ -89,7 +89,7 @@ class ProductView(MethodView):
 
     # PUT
     @classmethod
-    def put(cls, product_id):
+    def put(cls, current_user, product_id):
         """
         PUT request to update contents
         of a product by id
@@ -99,8 +99,8 @@ class ProductView(MethodView):
         """
         if not request.content_type == 'application/json':
             return response('request must be of type json', 'failed', 400)
-        # if not is_admin_role(current_user.role):
-        #     return response('Admin previllages required', 'unsuccessful', 401)
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
 
         sent_data = request.get_json()
         name = sent_data.get('name')
@@ -117,7 +117,7 @@ class ProductView(MethodView):
 
     # DELETE
     @classmethod
-    def delete(cls, product_id):
+    def delete(cls, current_user, product_id):
         """
         DELETE request to delete a product by id
 
@@ -126,8 +126,8 @@ class ProductView(MethodView):
         """
         if not request.content_type == 'application/json':
             return response('request must be of type json', 'failed', 400)
-        # if not is_admin_role(current_user.role):
-        #     return response('Admin previllages required', 'unsuccessful', 401)
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
 
         # delete the product
         deleted = Controller.delete_product_by_id(product_id)
