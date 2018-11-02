@@ -1,6 +1,7 @@
 from flasky.helper_functions import search_dict_by_key
 from flasky.helper_functions import return_all_dict_values
 from flasky.database.postgres import db
+import json
 
 
 class Controller:
@@ -14,8 +15,11 @@ class Controller:
     # save a new sale record
     @classmethod
     def add_sale_record(cls, sale):
-        query = "INSERT INTO sales (sale_id, attendant, products, total_products, total_amount)\
-            VALUES(%s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO sales (sale_id, attendant, products, total_product, total_amount)\
+            VALUES(%s, %s, %s, %s, %s)"
+        for index, product in enumerate(sale.products):
+            sale.products[index].pop('created_timestamp')
+        sale.products = [json.dumps(product) for product in sale.products]
         values = (sale.sale_id, sale.attendant, sale.products, sale.total_products, sale.total_amount)
         db.insert(query, values)
 
