@@ -28,7 +28,7 @@ class Controller:
 
     @classmethod
     def fetch_product_by_name(cls, product_name):
-        query = "SELECT * FROM questions WHERE name = '{}'".format(product_name)
+        query = "SELECT * FROM products WHERE name = '{}'".format(product_name)
         product = db.fetch_one(query)
         if product is None:
             return 'product ' + product_name + ' does not exist'
