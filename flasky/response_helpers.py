@@ -47,6 +47,7 @@ def all_products_response(products, status, status_code):
 
 # sale custom responses
 def single_sale_response(sale, status_code):
+    print(sale)
     return make_response(jsonify({
         'sale_id': sale.sale_id,
         'attendant': sale.attendant,
