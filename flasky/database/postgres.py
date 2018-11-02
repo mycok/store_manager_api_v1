@@ -41,18 +41,21 @@ class DataBase:
         token_file = "flasky/database/invalid_token_table.sql"
         users_file = "flasky/database/users_table.sql"
         product_file = "flasky/database/products_table.sql"
+        cart_file = "flasky/database/cart_table.sql"
+        sale_file = "flasky/database/sales_table.sql"
 
         token_sql = open(token_file, mode='r', encoding='utf-8').read()
         users_sql = open(users_file, mode='r', encoding='utf-8').read()
         product_sql = open(product_file, mode='r', encoding='utf-8').read()
+        cart_sql = open(cart_file, mode='r', encoding='utf-8').read()
+        sales_sql = open(sale_file, mode='r', encoding='utf-8').read()
 
         cls.cursor.execute(users_sql)
-        cls.connection.commit()
-
         cls.cursor.execute(product_sql)
-        cls.connection.commit()
-
         cls.cursor.execute(token_sql)
+        cls.cursor.execute(cart_sql)
+        cls.cursor.execute(sales_sql)
+
         cls.connection.commit()
 
     @classmethod
@@ -60,14 +63,15 @@ class DataBase:
         users = "DROP TABLE IF EXISTS users CASCADE"
         products = "DROP TABLE IF EXISTS products CASCADE"
         invalidtokens = "DROP TABLE IF EXISTS invalidtokens CASCADE"
+        cart = "DROP TABLE IF EXISTS cart_table CASCADE"
+        sales = "DROP TABLE IF EXISTS sales CASCADE"
 
         cls.cursor.execute(users)
-        cls.connection.commit()
-
         cls.cursor.execute(products)
-        cls.connection.commit()
-
         cls.cursor.execute(invalidtokens)
+        cls.cursor.execute(cart)
+        cls.cursor.execute(sales)
+
         cls.connection.commit()
         print('...dropped...')
 
