@@ -1,5 +1,6 @@
-from flask import (Blueprint, request, url_for)
+from flask import (Blueprint, request, url_for, jsonify)
 from flask.views import MethodView
+import json
 
 from flasky.sale.sale_model import Sale
 from flasky.validator import Validation as v
@@ -8,6 +9,10 @@ from flasky.sale.sale_controller import controller
 from flasky.response_helpers import (single_sale_response,
                                      response, create_sale_response,
                                      convert_list_to_json, all_sales_response)
+
+from flasky.auth.auth_decorator import (
+    token_required, is_admin_role, is_attendant_role
+)
 
 
 sales_bp = Blueprint('sales', __name__, url_prefix='/api/v2')
@@ -42,6 +47,7 @@ class SaleRecordsView(MethodView):
         AddToCart.update_sale_attributes(new_sale, products)
         # save new sale object
         controller.add_sale_record(new_sale)
+        new_sale.products = [json.loads(product) for product in new_sale.products]
         # return response with a new sale
         return single_sale_response(new_sale, 201)
 
@@ -49,10 +55,12 @@ class SaleRecordsView(MethodView):
     @classmethod
     def get(cls):
         sales = controller.fetch_all_sale_records()
+        print(sales)
+        for index, sale in enumerate(sales):
+            sales[index] = [json.loads(product) for product in sale['products']]
         if not isinstance(sales, list):
             return response(sales, 'unsuccessful', 400)
-        return all_sales_response(
-            convert_list_to_json(sales), 'successful', 200)
+        return all_sales_response((sales), 'successful', 200)
 
 
 class SaleView(MethodView):
@@ -63,9 +71,11 @@ class SaleView(MethodView):
     def get(cls, sale_id):
         # GET request to fetch a sale by id
         sale = controller.fetch_sale_record(sale_id)
-        if not isinstance(sale, Sale):
+        print(sale)
+        if not isinstance(sale, dict):
             return response(sale, 'unsuccessful', 400)
-        return single_sale_response(sale, 200)
+        sale['products'] = [json.loads(product) for product in sale['products']]
+        return jsonify(sale, 200)
 
 
 # Register a class as a view
