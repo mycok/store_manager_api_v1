@@ -20,6 +20,7 @@ def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         token = None
+        message = None
         # if the request contains an authorization header
         if 'Authorization' in request.headers:
             auth_header = request.headers['Authorization']
@@ -32,8 +33,8 @@ def token_required(f):
                 # if the token can't be extracted due to
                 # an index out of range error
                 return make_response(jsonify({
-                    'status': 'Failed to extract token',
-                    'message': 'Please provide a valid token'
+                    'status': 'unsuccessful',
+                    'message': 'failed to extract a token. please provide a valid token'
                 })), 403
 
         if not token:
@@ -48,16 +49,23 @@ def token_required(f):
         blacklisted_token = TokenController.check_if_token_exists(
             token)
         if isinstance(blacklisted_token, dict):
-            return response(
+            message = response(
                 'token blacklisted, please login again', 'unsuccessful', 401)
+
         decoded_response = User.decode_auth_token(token)
-        user = controller.fetch_user_by_id(decoded_response)
-        current_user = User(
-            username=user['username'], role=user['role'],
-            email=user['email'], password=user['password']
-            )
+        if 'token is invalid' in decoded_response:
+            message = response(decoded_response, 'unsuccessful', 401)
         # extract the user from the
         # db and assign that user as an argument in the returned function
+        if message is not None:
+            return message
+        else:
+            user = controller.fetch_user_by_id(decoded_response)
+            current_user = User(
+                username=user['username'], role=user['role'],
+                email=user['email'], password=user['password']
+                )
+
         return f(current_user, *args, **kwargs)
 
     return decorated_function
