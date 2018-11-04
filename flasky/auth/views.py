@@ -12,7 +12,7 @@ from flasky.auth.user_model import User
 from flasky.auth.invalid_token_model import InvalidToken
 from flasky.validator import Validation as v
 from flasky.auth.auth_decorator import (
-    token_required, is_admin_role, is_attendant_role
+    token_required, is_admin_role
 )
 
 
@@ -29,7 +29,7 @@ class SignUp(MethodView):
     def post(cls, current_user):
         # check request content type
         if not request.content_type == 'application/json':
-            abort(400)
+            abort(400, 'request must be of type json')
         # check user role
         if not is_admin_role(current_user.role):
             return response('Admin previllages required', 'unsuccessful', 401)
@@ -56,7 +56,7 @@ class SignUp(MethodView):
         controller.create_user(new_user)
         # return a success response
         return create_user_response(
-            new_user, url_for('auth.register', email=new_user.email))
+            new_user, url_for('auth.signup', name=new_user.username))
 
 
 class Login(MethodView):
@@ -112,28 +112,23 @@ class Logout(MethodView):
 
         except IndexError:
             return response('unable to extract token', 'unsuccessful', 403)
-        else:
-            # decode token to retrieve a user_id
-            decoded_token_response = User.decode_auth_token(auth_token)
 
-            if isinstance(decoded_token_response, int):
-                return response(decoded_token_response, 'unsuccessful', 401)
         # check if the token is already blacklisted
-            is_token_invalid = TokenController.check_if_token_exists(
-                auth_token)
+        is_token_invalid = TokenController.check_if_token_exists(
+            auth_token)
 
-            if isinstance(is_token_invalid, dict):
-                return response(
-                    'token already invalidated', 'unsuccessful', 400)
-            # blacklist/invalidate token
-            token = InvalidToken(auth_token)
-            # save blacklisted token to a databse
-            TokenController.save_invalid_token(token)
-            return response('successfully logged out', 'success', 200)
+        if isinstance(is_token_invalid, dict):
+            return response(
+                'token already invalidated', 'unsuccessful', 400)
+        # blacklist/invalidate token
+        token = InvalidToken(auth_token)
+        # save blacklisted token to a databse
+        TokenController.save_invalid_token(token)
+        return response('successfully logged out', 'success', 200)
 
 
 # Register a class as a view
-signup = SignUp.as_view('register')
+signup = SignUp.as_view('signup')
 login = Login.as_view('login')
 logout = Logout.as_view('logout')
 
