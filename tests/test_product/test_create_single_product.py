@@ -22,18 +22,6 @@ class TestCreateProduct(TestFixture):
             self.assertEqual(new_response.status_code, 400)
             self.assertEqual(data['message'], 'product macbookair already exists')
 
-    def test_create_product_with_wrong_content_type(self):
-        """
-         Test unsuccessful POST request to
-        create a product with wrong content type
-        """
-        with self.client:
-            response = self.create_product_with_wrong_content_type()
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(data['message'], 'request must be of type json')
-            self.assertEqual(data['status'], 'unsuccessful')
-
     def test_create_product_with_a_missing_attribute(self):
         """
         Test unsuccessful POST request to
