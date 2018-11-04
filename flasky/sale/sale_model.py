@@ -1,5 +1,4 @@
 from flasky.helper_functions import generate_id
-from flasky.product.product_model import Product
 
 
 class Sale:
