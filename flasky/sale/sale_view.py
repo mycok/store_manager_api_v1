@@ -1,4 +1,4 @@
-from flask import (Blueprint, request, url_for, jsonify)
+from flask import (Blueprint, request, jsonify)
 from flask.views import MethodView
 import json
 
@@ -7,8 +7,8 @@ from flasky.validator import Validation as v
 from flasky.cart.cart_controller import AddToCart
 from flasky.sale.sale_controller import controller
 from flasky.response_helpers import (single_sale_response,
-                                     response, create_sale_response,
-                                     convert_list_to_json, all_sales_response)
+                                     response,
+                                     all_sales_response)
 
 from flasky.auth.auth_decorator import (
     token_required, is_admin_role, is_attendant_role
@@ -21,16 +21,20 @@ sales_bp = Blueprint('sales', __name__, url_prefix='/api/v2')
 class SaleRecordsView(MethodView):
 
     # A method view class to handle requests with the /sales endpoint
-
     methods = ['POST', 'GET']
+
+    decorators = [token_required]
 
     # create a sale
     @classmethod
-    def post(cls):
+    def post(cls, current_user):
         # check for a valid content type
         if not request.content_type == 'application/json':
             return response(
                 'request must be of type json', 'unsuccessful', 400)
+
+        if not is_attendant_role(current_user.role):
+            return response('Attendant previllages required', 'unsuccessful', 401)
         # extract request data
         request_data = request.get_json()
         attendant = request_data.get('attendant')
@@ -53,9 +57,11 @@ class SaleRecordsView(MethodView):
 
     # fetch all sales
     @classmethod
-    def get(cls):
+    def get(cls, current_user):
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
+
         sales = controller.fetch_all_sale_records()
-        print(sales)
         for index, sale in enumerate(sales):
             sales[index] = [json.loads(product) for product in sale['products']]
         if not isinstance(sales, list):
@@ -67,15 +73,19 @@ class SaleView(MethodView):
 
     methods = ['GET']
 
+    decorators = [token_required]
+
     @classmethod
-    def get(cls, sale_id):
+    def get(cls, current_user, sale_id):
         # GET request to fetch a sale by id
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
+
         sale = controller.fetch_sale_record(sale_id)
-        print(sale)
         if not isinstance(sale, dict):
             return response(sale, 'unsuccessful', 400)
         sale['products'] = [json.loads(product) for product in sale['products']]
-        return jsonify(sale, 200)
+        return jsonify(sale, 'success'), 200
 
 
 # Register a class as a view
