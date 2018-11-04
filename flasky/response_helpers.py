@@ -47,7 +47,6 @@ def all_products_response(products, status, status_code):
 
 # sale custom responses
 def single_sale_response(sale, status_code):
-    print(sale)
     return make_response(jsonify({
         'sale_id': sale.sale_id,
         'attendant': sale.attendant,
@@ -56,14 +55,6 @@ def single_sale_response(sale, status_code):
         'total_amount': sale.total_amount,
         'status': 'success'
     })), status_code
-
-
-def create_sale_response(sale, resource_url):
-    return make_response(jsonify({
-        'message': 'sale with {} has been added'.format(sale.sale_id),
-        'status': 'successful',
-        'resource_link': resource_url
-    })), 201
 
 
 def all_sales_response(sales, status, status_code):
