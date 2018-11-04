@@ -1,5 +1,3 @@
-from flasky.helper_functions import search_dict_by_key
-from flasky.helper_functions import return_all_dict_values
 from flasky.database.postgres import db
 import json
 
@@ -17,8 +15,9 @@ class Controller:
     def add_sale_record(cls, sale):
         query = "INSERT INTO sales (sale_id, attendant, products, total_product, total_amount)\
             VALUES(%s, %s, %s, %s, %s)"
-        for index, product in enumerate(sale.products):
+        for index, _ in enumerate(sale.products):
             sale.products[index].pop('created_timestamp')
+
         sale.products = [json.dumps(product) for product in sale.products]
         values = (sale.sale_id, sale.attendant, sale.products, sale.total_products, sale.total_amount)
         db.insert(query, values)
@@ -33,10 +32,8 @@ class Controller:
     @classmethod
     def fetch_all_sale_records(cls):
         query = "SELECT * FROM sales"
-        sales = db.fetch_all(query)
-        if not isinstance(sales, list) or len(sales) == 0:
-            return "No sales available"
-        return sales
+        sales = 'sales'
+        return db.select_query(query, sales)
 
 
 # create an instance of a sale controller class
