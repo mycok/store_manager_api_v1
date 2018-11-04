@@ -17,9 +17,9 @@ class UserController:
     @classmethod
     def check_if_user_exists(cls, email):
         query = "SELECT * FROM users WHERE email = '{}'".format(email)
-        return db.check(query)
+        return db.fetch_one(query)
 
     @classmethod
     def fetch_user_by_id(cls, user_id):
         query = "SELECT * FROM users WHERE user_id = '{}'".format(user_id)
-        return db.check(query)
+        return db.fetch_one(query)
