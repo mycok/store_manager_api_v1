@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, request, url_for)
+    Blueprint, request, url_for, abort)
 from flask.views import MethodView
 
 from flasky.product.product_model import Product
@@ -7,11 +7,10 @@ from flasky.validator import Validation as v
 from flasky.product.product_controller import Controller
 from flasky.response_helpers import (
     create_resource_response, response,
-    single_product_response, fetch_all_response,
-    convert_list_to_json
+    fetch_all_response
 )
 from flasky.auth.auth_decorator import (
-    token_required, is_admin_role, is_attendant_role
+    token_required, is_admin_role
 )
 
 
@@ -32,11 +31,10 @@ class ProductListView(MethodView):
     def post(cls, current_user):
         # check for a valid content type
         if not request.content_type == 'application/json':
-            return response('request must be of type json',
-                            'unsuccessful', 400)
+            abort(400, 'request must be of type json')
+        # check for user role
         if not is_admin_role(current_user.role):
             return response('Admin previllages required', 'unsuccessful', 401)
-
         # extract request data
         request_data = request.get_json()
         name = request_data.get('name')
@@ -110,10 +108,12 @@ class ProductView(MethodView):
 
         # query the database through a manager object
         updated = Controller.update_product(
-            name, category, quantity, price, product_id)
+            name=name, category=category, quantity=quantity,
+            price=price, product_id=product_id)
+
         if updated is None:
             return response(updated, 'unsuccessful', 400)
-        return response(str(updated) + ' row successfully updated', 'success', 200)
+        return response(updated, 'success', 200)
 
     # DELETE
     @classmethod
