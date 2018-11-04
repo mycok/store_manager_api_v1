@@ -43,8 +43,7 @@ class Controller:
     @classmethod
     def fetch_all_products(cls):
         query = "SELECT * FROM products"
-        products = 'products'
-        return db.select_query(query, products)
+        return db.select_query(query)
 
     @classmethod
     def update_product(cls, **kwargs):
