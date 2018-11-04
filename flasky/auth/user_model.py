@@ -1,6 +1,7 @@
 import datetime
 import bcrypt
 import jwt
+from flask import current_app
 
 from flasky.helper_functions import generate_id
 
@@ -51,8 +52,9 @@ class User:
         """
         try:
             payload = {
-                'exp': datetime.datetime.now() + datetime.timedelta(days=1,
-                                                                    seconds=234000000),
+                'exp': datetime.datetime.now() + datetime.timedelta(
+                    days=1,
+                    seconds=20),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
