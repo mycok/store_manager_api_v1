@@ -39,6 +39,7 @@ class AddToCart(object):
         cls.save(product, product_id, quantity)
 
     @classmethod
+    # save product to the cart table
     def save(cls, product, product_id, quantity):
         sales = product.sales + 1
         new_quantity = int(product.quantity) - quantity
@@ -47,16 +48,15 @@ class AddToCart(object):
             VALUES(%s, %s, %s, %s, %s, %s, %s)"
         values = (product_id, product.name, product.category, new_quantity, quantity, product.price, sales)
         db.insert(query, values)
-
+        # update the products from the products table
         Controller.update_product(product.name, product.category, new_quantity, product.price, product_id)
 
     @classmethod
+    # load all products from the cart table
     def load_cart(cls):
         query = "SELECT * FROM cart"
-        products = db.fetch_all(query)
-        if not isinstance(products, list) or len(products) == 0:
-            return "No products available"
-        return products
+        resource = 'products'
+        return db.select_query(query, resource)
 
     # adjust sale attributes after sale
     @classmethod
