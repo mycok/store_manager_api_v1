@@ -1,5 +1,3 @@
-from flasky.helper_functions import search_dict_by_key
-from flasky.helper_functions import return_all_dict_values
 from flasky.helper_functions import generate_id
 from flasky.database.postgres import db
 
@@ -24,7 +22,7 @@ class Controller:
     @classmethod
     def check_if_product_exists(cls, product_name):
         query = "SELECT * FROM products WHERE name = '{}'".format(product_name)
-        return db.check(query)
+        return db.fetch_one(query)
 
     @classmethod
     def fetch_product_by_name(cls, product_name):
@@ -45,20 +43,22 @@ class Controller:
     @classmethod
     def fetch_all_products(cls):
         query = "SELECT * FROM products"
-        products = db.fetch_all(query)
-        if not isinstance(products, list) or len(products) == 0:
-            return "No products available"
-        return products
+        products = 'products'
+        return db.select_query(query, products)
 
     @classmethod
-    def update_product(cls, name, category, quantity, price, product_id):
+    def update_product(cls, **kwargs):
 
-        # if name is not None and category is not None and quantity is not None and price is not None:
         query = """UPDATE products SET name = '{}',
          category = '{}', quantity = '{}',
          price = '{}' WHERE product_id = '{}'
-         """.format(name, category, quantity, price, product_id)
-        return db.update(query)
+         """.format(kwargs['name'], kwargs['category'], kwargs['quantity'],
+                    kwargs['price'], kwargs['product_id'])
+
+        updated = db.update(query)
+        if updated == 1:
+            return cls.fetch_product_by_id(kwargs['product_id'])
+        return "product update unsuccessful"
 
     @classmethod
     def delete_product_by_id(cls, product_id):
