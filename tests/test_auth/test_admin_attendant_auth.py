@@ -58,7 +58,7 @@ class TestAdmin_Attendant_Login(TestFixture):
             response = self.create_attendants_with_invalid_token()
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 403)
-            self.assertEqual(data['message'], 'Please provide a valid token')
+            self.assertEqual(data['message'], 'failed to extract a token. please provide a valid token')
 
     def test_admin_cant_signup_or_login_without_a_token(self):
         with self.client:
