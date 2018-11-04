@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 from flask.views import MethodView
 
-from flasky.validator import Validation as v
 from flasky.cart.cart_controller import AddToCart
 from flasky.response_helpers import response
 
