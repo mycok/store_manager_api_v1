@@ -49,7 +49,9 @@ class AddToCart(object):
         values = (product_id, product.name, product.category, new_quantity, quantity, product.price, sales)
         db.insert(query, values)
         # update the products from the products table
-        Controller.update_product(product.name, product.category, new_quantity, product.price, product_id)
+        Controller.update_product(
+            name=product.name, category=product.category,
+            quantity=new_quantity, price=product.price, product_id=product_id)
 
     @classmethod
     # load all products from the cart table
