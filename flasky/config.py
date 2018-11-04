@@ -7,6 +7,7 @@ class Config:
     """This class is used to set the initial configuration
        variables for the app
     """
+    SECRET_KEY = os.getenv('SECRET_KEY', 'thisshouldkeptsecret')
     DEBUG = False
 
 
@@ -14,7 +15,6 @@ class DevelopmentConfig(Config):
     """This class is used to set the configuration
        variables necessary for development
      """
-
     DEBUG = True
 
 
