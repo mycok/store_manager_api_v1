@@ -32,8 +32,7 @@ class Controller:
     @classmethod
     def fetch_all_sale_records(cls):
         query = "SELECT * FROM sales"
-        sales = 'sales'
-        return db.select_query(query, sales)
+        return db.select_query(query)
 
 
 # create an instance of a sale controller class
