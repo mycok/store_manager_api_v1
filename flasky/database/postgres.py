@@ -22,10 +22,11 @@ class DataBase:
         pass
 
     @classmethod
-    def connect(cls, *args):
+    def connect(cls, **kwargs):
         try:
             cls.connection = psycopg2.connect(
-                dbname=args[0], user=args[1], password=args[2])
+                dbname=kwargs['dbname'], user=kwargs['user'],
+                password=kwargs['password'])
 
             cls.cursor = cls.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)

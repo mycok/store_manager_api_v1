@@ -37,7 +37,7 @@ def token_required(f):
                     'message': 'failed to extract a token. please provide a valid token'
                 })), 403
 
-        if not token:
+        elif not token:
             # if there is no token in the request header
             return make_response(jsonify({
                 'message': 'Missing a token'
@@ -57,14 +57,16 @@ def token_required(f):
             message = response(decoded_response, 'unsuccessful', 401)
         # extract the user from the
         # db and assign that user as an argument in the returned function
+        user = controller.fetch_user_by_id(decoded_response)
+        if user is None:
+            message = response("user doesnot exist", 'unsuccessful', 401)
         if message is not None:
             return message
-        else:
-            user = controller.fetch_user_by_id(decoded_response)
-            current_user = User(
-                username=user['username'], role=user['role'],
-                email=user['email'], password=user['password']
-                )
+
+        current_user = User(
+            username=user['username'], role=user['role'],
+            email=user['email'], password=user['password']
+            )
 
         return f(current_user, *args, **kwargs)
 
