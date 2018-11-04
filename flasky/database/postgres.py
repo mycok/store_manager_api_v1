@@ -76,11 +76,11 @@ class DataBase:
         print('...dropped...')
 
     @classmethod
-    def select_query(cls, query, resources):
-        resources = cls.fetch_all(query)
-        if not isinstance(resources, list) or len(resources) == 0:
-            return "No {} available".format(resources)
-        return resources
+    def select_query(cls, query):
+        items = cls.fetch_all(query)
+        if not isinstance(items, list) or len(items) == 0:
+            return "No items available"
+        return items
 
     @classmethod
     def insert(cls, insert_query, values):
