@@ -1,7 +1,6 @@
 import datetime
 import bcrypt
 import jwt
-from flask import current_app
 
 from flasky.helper_functions import generate_id
 
