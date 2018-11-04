@@ -57,8 +57,7 @@ class AddToCart(object):
     # load all products from the cart table
     def load_cart(cls):
         query = "SELECT * FROM cart"
-        resource = 'products'
-        return db.select_query(query, resource)
+        return db.select_query(query)
 
     # adjust sale attributes after sale
     @classmethod
