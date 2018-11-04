@@ -76,6 +76,13 @@ class DataBase:
         print('...dropped...')
 
     @classmethod
+    def select_query(cls, query, resources):
+        resources = cls.fetch_all(query)
+        if not isinstance(resources, list) or len(resources) == 0:
+            return "No {} available".format(resources)
+        return resources
+
+    @classmethod
     def insert(cls, insert_query, values):
         try:
             cls.cursor.execute(insert_query, values)
@@ -83,16 +90,6 @@ class DataBase:
         except (Exception) as error:
             cls.connection.rollback()
             print('Failed to insert data into table {}'.format(error))
-
-    @classmethod
-    def check(cls, select_query):
-        try:
-            cls.cursor.execute(select_query)
-            return cls.cursor.fetchone()
-        except (Exception) as error:
-            if cls.connection:
-                cls.connection.rollback()
-            print('Failed to select table data {}'.format(error))
 
     @classmethod
     def update(cls, update_query):
