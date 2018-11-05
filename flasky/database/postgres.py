@@ -34,8 +34,8 @@ class DataBase:
             print("...connected....")
 
         except (Exception) as error:
-            cls.connection.rollback()
-            cls.connection.commit()
+            # cls.connection.rollback()
+            # cls.connection.commit()
             print('Failed to connect to the database {}'.format(error))
 
     @classmethod
