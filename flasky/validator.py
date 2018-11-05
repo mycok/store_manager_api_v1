@@ -61,11 +61,9 @@ class Validation:
         return True
 
     @classmethod
-    def validate_shopping_cart_product(cls, name, quantity):
-        if not cls.is_valid_string(name):
-            return 'please provide a valid product name'
-        elif not cls.is_valid_numb(quantity):
-            return 'please provide a valid product quantity'
+    def validate_cart_product(cls, product_id, quantity):
+        if not cls.is_valid_numb(product_id) or not cls.is_valid_numb(quantity):
+            return 'please provide a valid product id or/and quantity'
         return True
 
     @classmethod
