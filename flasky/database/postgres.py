@@ -25,7 +25,7 @@ class DataBase:
     def connect(cls, **kwargs):
         try:
             cls.connection = psycopg2.connect(
-                dbname=kwargs['dbname'], user=kwargs['user'],
+                host=kwargs['host'], database=kwargs['database'], user=kwargs['user'],
                 password=kwargs['password'])
 
             cls.cursor = cls.connection.cursor(

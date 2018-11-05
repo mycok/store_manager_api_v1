@@ -17,7 +17,11 @@ def create_app(config_name=None):
     else:
         app.config.from_object(DevelopmentConfig)
         # database setup
-        db.connect(dbname='my_store', user='Myko', password='1987')
+        db.connect(
+            host='ec2-54-221-225-11.compute-1.amazonaws.com',
+            database='d22v3rkkal8rou', user='ipjynsshkkbzgv',
+            password='fbd36334598b49807a167f261daaa09b41e4f2835c6ad7cbcc7085152dcec863'
+            )
         db.create_db_tables()
     # register blueprints
     app.register_blueprint(products_bp)
