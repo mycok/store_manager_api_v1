@@ -25,8 +25,9 @@ class DataBase:
     def connect(cls, **kwargs):
         try:
             cls.connection = psycopg2.connect(
-                host=kwargs['host'], database=kwargs['database'], user=kwargs['user'],
-                password=kwargs['password'])
+                Host=kwargs['host'], Database=kwargs['database'],
+                User=kwargs['user'],
+                Password=kwargs['password'])
 
             cls.cursor = cls.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from flasky.config import DevelopmentConfig
+from flasky.config import ProductionConfig
 from flasky.product.product_view import products_bp
 from flasky.auth.views import auth_bp
 from flasky.database.postgres import db
@@ -15,11 +15,12 @@ def create_app(config_name=None):
     if config_name is not None:
         app.config.from_object(config_name)
     else:
-        app.config.from_object(DevelopmentConfig)
+        app.config.from_object(ProductionConfig)
         # database setup
         db.connect(
             host='ec2-54-221-225-11.compute-1.amazonaws.com',
-            database='d22v3rkkal8rou', user='ipjynsshkkbzgv',
+            database='d22v3rkkal8rou',
+            user='ipjynsshkkbzgv',
             password='fbd36334598b49807a167f261daaa09b41e4f2835c6ad7cbcc7085152dcec863'
             )
         db.create_db_tables()
