@@ -26,7 +26,10 @@ class Controller:
     @classmethod
     def fetch_sale_record(cls, sale_id):
         query = "SELECT * FROM sales WHERE sale_id = '{}'".format(sale_id)
-        return db.fetch_one(query)
+        sale = db.fetch_one(query)
+        if sale is not None:
+            return sale
+        return 'sale with ID ' + str(sale_id) + ' doesnot exist'
 
     # fetch all sale reccords
     @classmethod
