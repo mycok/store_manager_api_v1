@@ -38,6 +38,18 @@ class TestAdminSignUp(TestFixture):
             self.assertEqual(
                 data['message'], 'invalid email or missing email address')
 
+    def test_admin_cant_create_attendant_with_invalid_name(self):
+        with self.client:
+            resp = self.user_login()
+            data = json.loads(resp.data.decode())
+            token = data['token']
+
+            response = self.cant_create_attendants_with_invalid_name(token)
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                data['message'], 'Please provide the correct name and/or username')
+
 
 class TestAdmin_Attendant_Login(TestFixture):
     def test_admin_attendant_login(self):
@@ -52,6 +64,30 @@ class TestAdmin_Attendant_Login(TestFixture):
             self.assertEqual(response.status_code, 401)
             self.assertEqual(
                 data['message'], 'provided password is incorrect')
+
+    def test_admin_attendant_cant_login_with_invalid_password(self):
+        with self.client:
+            response = self.invalid_user_login()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(
+                data['message'], 'provided password is incorrect')
+
+    def test_admin_attendant_cant_login_without_a_password(self):
+        with self.client:
+            response = self.missing_password_user_login_()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(
+                data['message'], 'missing password/password should be atleast 4 characters')
+
+    def test_admin_attendant_cant_login_with_invalid_email(self):
+        with self.client:
+            response = self.invalid_email_user_login_()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(
+                data['message'], 'invalid email or missing email address')
 
     def test_admin_cant_signup_or_loginwith_an_invalid_token(self):
         with self.client:
