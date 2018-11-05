@@ -5,7 +5,7 @@ from tests.fixture import TestFixture
 
 class TestShoppingCart(TestFixture):
     def test_add_product_to_cart(self):
-            response = self.add_product_to_shopping_cart()
+            response = self.add_product_to_cart()
             self.assertEqual(response.status_code, 201)
 
     def test_cant_add_product_invalid_content_type(self):
@@ -27,3 +27,11 @@ class TestShoppingCart(TestFixture):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
                 data['message'], 'product with ID 12345678990 doesnot exist')
+
+    def test_cant_add_product_invalid_quantity(self):
+        # add product to shopping cart
+            response = self.client.post(
+                '/api/v2/cart', content_type='application/json',
+                data=json.dumps(dict(product_id=12345678, quantity=0))
+            )
+            self.assertEqual(response.status_code, 400)

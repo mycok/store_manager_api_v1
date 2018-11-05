@@ -9,11 +9,19 @@ class TestCreateProduct(TestFixture):
         with self.client:
             response = self.create_product()
             data = json.loads(response.data.decode())
-            # self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, 201)
             self.assertEqual(data['message'], 'macbookair has been added')
 
+    def test_create_a_product_with_attendant_previllages(self):
+        # Test unsuccessful POST request to create a product
+        with self.client:
+            response = self.cant_create_product_as_an_attendant()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(data['message'], 'Admin previllages required')
+
     def test_cant_create_a_duplicate_product(self):
-        # Test successful POST request to create a product
+        # Test unsuccessful POST request to create a duplicate product
         with self.client:
             _ = self.create_product()
 
@@ -38,7 +46,7 @@ class TestCreateProduct(TestFixture):
     def test_cant_create_product_with_an_empty_string_as_name(self):
         """
          Test unsuccessful POST request to
-        create a product with an empty string
+        create a product with an empty name string
         """
         with self.client:
             response = self.create_product_with_an_empty_string()
