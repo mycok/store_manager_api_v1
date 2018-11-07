@@ -21,10 +21,10 @@ class DataBase:
     def __init__(self):
         try:
             self.connection = psycopg2.connect(
-                Host='ec2-107-22-241-243.compute-1.amazonaws.com',
-                Database='d3du2vcd5d0031',
-                User='yerumrcmmbodcj',
+                host='ec2-107-22-241-243.compute-1.amazonaws.com',
+                user='yerumrcmmbodcj',
                 Password='a1b8aa59b3efb84c23ab7ac94f479c2592dbd1c23658e4a0e01975b0c336e80d',
+                database='d3du2vcd5d0031',
                 port='5432')
 
             self.cursor = self.connection.cursor(
