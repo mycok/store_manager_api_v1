@@ -19,27 +19,41 @@ class DataBase:
     """
 
     def __init__(self):
-        pass
-
-    @classmethod
-    def connect(cls, **kwargs):
         try:
-            cls.connection = psycopg2.connect(
-                Host=kwargs['host'], Database=kwargs['database'],
-                User=kwargs['user'],
-                Password=kwargs['password'], port=kwargs['port'])
+            self.connection = psycopg2.connect(
+                Host='ec2-107-22-241-243.compute-1.amazonaws.com',
+                Database='d3du2vcd5d0031',
+                User='yerumrcmmbodcj',
+                Password='a1b8aa59b3efb84c23ab7ac94f479c2592dbd1c23658e4a0e01975b0c336e80d',
+                port='5432')
 
-            cls.cursor = cls.connection.cursor(
+            self.cursor = self.connection.cursor(
                 cursor_factory=psycopg2.extras.RealDictCursor)
             print("...connected....")
 
         except (Exception) as error:
-            # cls.connection.rollback()
-            # cls.connection.commit()
+            self.connection.rollback()
+            self.connection.commit()
             print('Failed to connect to the database {}'.format(error))
 
-    @classmethod
-    def create_db_tables(cls):
+    # @classmethod
+    # def connect(cls, **kwargs):
+        # try:
+        #     cls.connection = psycopg2.connect(
+        #         Host=kwargs['host'], Database=kwargs['database'],
+        #         User=kwargs['user'],
+        #         Password=kwargs['password'], port=kwargs['port'])
+
+        #     cls.cursor = cls.connection.cursor(
+        #         cursor_factory=psycopg2.extras.RealDictCursor)
+        #     print("...connected....")
+
+        # except (Exception) as error:
+        #     # cls.connection.rollback()
+        #     # cls.connection.commit()
+        #     print('Failed to connect to the database {}'.format(error))
+
+    def create_db_tables(self):
         token_file = "flasky/database/invalid_token_table.sql"
         users_file = "flasky/database/users_table.sql"
         product_file = "flasky/database/products_table.sql"
@@ -52,94 +66,86 @@ class DataBase:
         cart_sql = open(cart_file, mode='r', encoding='utf-8').read()
         sales_sql = open(sale_file, mode='r', encoding='utf-8').read()
 
-        cls.cursor.execute(users_sql)
-        cls.cursor.execute(product_sql)
-        cls.cursor.execute(token_sql)
-        cls.cursor.execute(cart_sql)
-        cls.cursor.execute(sales_sql)
+        self.cursor.execute(users_sql)
+        self.cursor.execute(product_sql)
+        self.cursor.execute(token_sql)
+        self.cursor.execute(cart_sql)
+        self.cursor.execute(sales_sql)
 
-        cls.connection.commit()
+        self.connection.commit()
 
-    @classmethod
-    def drop_tables(cls):
+    def drop_tables(self):
         users = "DROP TABLE IF EXISTS users CASCADE"
         products = "DROP TABLE IF EXISTS products CASCADE"
         invalidtokens = "DROP TABLE IF EXISTS invalidtokens CASCADE"
         cart = "DROP TABLE IF EXISTS cart_table CASCADE"
         sales = "DROP TABLE IF EXISTS sales CASCADE"
 
-        cls.cursor.execute(users)
-        cls.cursor.execute(products)
-        cls.cursor.execute(invalidtokens)
-        cls.cursor.execute(cart)
-        cls.cursor.execute(sales)
+        self.cursor.execute(users)
+        self.cursor.execute(products)
+        self.cursor.execute(invalidtokens)
+        self.cursor.execute(cart)
+        self.cursor.execute(sales)
 
-        cls.connection.commit()
+        self.connection.commit()
         print('...dropped...')
 
-    @classmethod
-    def select_query(cls, query):
-        items = cls.fetch_all(query)
+    def select_query(self, query):
+        items = self.fetch_all(query)
         if not isinstance(items, list) or len(items) == 0:
             return "No items available"
         return items
 
-    @classmethod
-    def insert(cls, insert_query, values):
+    def insert(self, insert_query, values):
         try:
-            cls.cursor.execute(insert_query, values)
-            cls.connection.commit()
+            self.cursor.execute(insert_query, values)
+            self.connection.commit()
         except (Exception) as error:
-            cls.connection.rollback()
+            self.connection.rollback()
             print('Failed to insert data into table {}'.format(error))
 
-    @classmethod
-    def update(cls, update_query):
+    def update(self, update_query):
         try:
-            cls.cursor.execute(update_query)
-            cls.connection.commit()
-            return cls.cursor.rowcount
+            self.cursor.execute(update_query)
+            self.connection.commit()
+            return self.cursor.rowcount
         except (Exception) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             print('Failed to update table data {}'.format(error))
 
-    @classmethod
-    def fetch_one(cls, fetch_one_query):
+    def fetch_one(self, fetch_one_query):
         try:
-            cls.cursor.execute(fetch_one_query)
-            return cls.cursor.fetchone()
+            self.cursor.execute(fetch_one_query)
+            return self.cursor.fetchone()
         except (Exception) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
 
-    @classmethod
-    def fetch_all(cls, fetch_all_query):
+    def fetch_all(self, fetch_all_query):
         try:
-            cls.cursor.execute(fetch_all_query)
-            return cls.cursor.fetchall()
+            self.cursor.execute(fetch_all_query)
+            return self.cursor.fetchall()
         except (Exception) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
 
-    @classmethod
-    def delete(cls, delete_query):
+    def delete(self, delete_query):
         try:
-            cls.cursor.execute(delete_query)
-            cls.connection.commit()
-            return cls.cursor.rowcount
+            self.cursor.execute(delete_query)
+            self.connection.commit()
+            return self.cursor.rowcount
         except (Exception) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
         print('Failed to delete table row data {}'.format(error))
 
-    @classmethod
-    def close(cls):
-        if cls.connection:
-            cls.cursor.close()
-            cls.connection.close()
+    def close(self):
+        if self.connection:
+            self.cursor.close()
+            self.connection.close()
 
 # create an instance of the database
 db = DataBase()
