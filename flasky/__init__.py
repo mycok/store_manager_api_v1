@@ -18,10 +18,11 @@ def create_app(config_name=None):
         app.config.from_object(ProductionConfig)
         # database setup
         db.connect(
-            host='ec2-54-221-225-11.compute-1.amazonaws.com',
-            database='d22v3rkkal8rou',
-            user='ipjynsshkkbzgv',
-            password='fbd36334598b49807a167f261daaa09b41e4f2835c6ad7cbcc7085152dcec863'
+            host='ec2-107-22-241-243.compute-1.amazonaws.com',
+            database='d3du2vcd5d0031',
+            user='yerumrcmmbodcj',
+            password='a1b8aa59b3efb84c23ab7ac94f479c2592dbd1c23658e4a0e01975b0c336e80d',
+            port='5432'
             )
         db.create_db_tables()
     # register blueprints
