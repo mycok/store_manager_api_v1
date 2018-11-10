@@ -104,12 +104,14 @@ class ProductView(MethodView):
         name = sent_data.get('name')
         category = sent_data.get('category')
         quantity = sent_data.get('quantity')
+        quantity_sold = sent_data.get('quantity_sold')
         price = sent_data.get('price')
+        sales = sent_data.get('sales')
 
         # query the database through a manager object
         updated = Controller.update_product(
             name=name, category=category, quantity=quantity,
-            price=price, product_id=product_id)
+            quantity_sold=quantity_sold, price=price, sales=sales, product_id=product_id)
 
         if updated is None:
             return response(updated, 'unsuccessful', 400)
