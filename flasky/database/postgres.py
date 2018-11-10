@@ -62,7 +62,7 @@ class DataBase:
         cls.cursor.execute(cart_sql)
         cls.cursor.execute(sales_sql)
 
-        self.connection.commit()
+        cls.connection.commit()
 
     @classmethod
     def drop_tables(cls):
