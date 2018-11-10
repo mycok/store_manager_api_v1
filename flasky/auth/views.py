@@ -21,7 +21,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/v2')
 
 class SignUp(MethodView):
 
-    methods = ['POST']
+    methods = ['POST', 'PUT']
 
     decorators = [token_required]
 
@@ -57,6 +57,35 @@ class SignUp(MethodView):
         # return a success response
         return create_user_response(
             new_user, url_for('auth.signup', name=new_user.username))
+
+    @classmethod
+    def put(cls, current_user):
+        # check request content type
+        if not request.content_type == 'application/json':
+            abort(400, 'request must be of type json')
+        # check user role
+        if not is_admin_role(current_user.role):
+            return response('Admin previllages required', 'unsuccessful', 401)
+        # extract request data
+        sent_data = request.get_json()
+        username = sent_data.get('username')
+        role = sent_data.get('role')
+        email = sent_data.get('email')
+        password = sent_data.get('password')
+        # validate input
+        is_input_valid = v.validate_user(username, email, password)
+        if not isinstance(is_input_valid, bool):
+            return response(is_input_valid, 'unsuccessful', 400)
+        # Check the new_user already exists
+        existing_user = controller.check_if_user_exists(email)
+        if existing_user is not None:
+            updated = controller.update_user_role(role, email)
+            if isinstance(updated, dict):
+                return response(updated, 'successful', 200)
+            return response(updated, 'unsuccessful', 400)
+        return response(
+            'user with email ' + email + ' doesnot exist',
+            'unsuccessful', 400)
 
 
 class Login(MethodView):
