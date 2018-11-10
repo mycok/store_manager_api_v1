@@ -11,7 +11,7 @@ class TestFetchSingleSale(TestFixture):
         # Test successful GET request to fetch a sale by id
         with self.client:
             # post a product
-            _ = self.create_product()
+            _ = self.add_product_to_cart()
             # post a sale
             response = self.create_sale()
             data = json.loads(response.data.decode())
@@ -62,7 +62,7 @@ class TestFetchSingleSale(TestFixture):
             # Test successful GET request to fetch a sale by id
         with self.client:
             # post a product
-            _ = self.create_product()
+            _ = self.add_product_to_cart()
             # post a sale
             response = self.create_sale()
             data = json.loads(response.data.decode())

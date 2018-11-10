@@ -18,6 +18,15 @@ class TestCreateSale(TestFixture):
             self.assertEqual(response.status_code, 201)
             self.assertEqual(data['attendant'], 'michael')
 
+    def test_cant_create_a_sale_with_no_products(self):
+        # Test successful POST request to create a sale
+        with self.client:
+            # try to create a sale with no  products
+            response = self.create_sale()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(data['message'], 'please add products to cart')
+
     def test_create_sale_with_wrong_content_type(self):
         """
         Test unsuccessful POST request to
