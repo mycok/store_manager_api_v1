@@ -1,5 +1,5 @@
 from flasky.product.product_controller import Controller
-from flasky.product.product_model import Product
+
 from flasky.helper_functions import parse_product_dict
 from flasky.database.postgres import db
 
@@ -27,31 +27,40 @@ class AddToCart(object):
         product_dict = Controller.fetch_product_by_id(product_id)
         if not isinstance(product_dict, dict):
             return product_dict
-        product = Product(product_dict['name'], product_dict['category'],
-                          product_dict['quantity'], product_dict['price'])
         # check if product is still in stock
         if product_dict['quantity'] == 0:
-            return 'Product ' + product.name + ' is out of stock'
+            return 'Product ' + product_dict['name'] + ' is out of stock'
         elif product_dict['quantity'] < quantity:
             return 'invalid quantity, please check the product stock'
-        # cls.update_product_attributes(product, quantity)
+
+        product_dict['quantity_sold'] += quantity
+        product_dict['sales'] += 1
+        product_dict['quantity'] -= quantity
         # save the product to cart
-        cls.save(product, product_id, quantity)
+        cls.save(product_id, quantity, name=product_dict['name'],
+                 category=product_dict['category'],
+                 price=product_dict['price'], sales=product_dict['sales'])
+        # update the products from the products table
+        Controller.update_product(
+            name=product_dict['name'], category=product_dict['category'],
+            quantity=product_dict['quantity'],
+            quantity_sold=product_dict['quantity_sold'],
+            price=product_dict['price'], sales=product_dict['sales'],
+            product_id=product_id)
 
     @classmethod
     # save product to the cart table
-    def save(cls, product, product_id, quantity):
-        sales = product.sales + 1
-        new_quantity = int(product.quantity) - quantity
+    def save(cls, product_id, quantity, **kwargs):
+        total_amount = kwargs['price'] * quantity
 
-        query = "INSERT INTO cart (product_id, name, category, quantity, quantity_sold, price, sales)\
-            VALUES(%s, %s, %s, %s, %s, %s, %s)"
-        values = (product_id, product.name, product.category, new_quantity, quantity, product.price, sales)
+        query = "INSERT INTO cart(product_id, name, category, quantity_sold, amount, sales)\
+            VALUES(%s, %s, %s, %s, %s, %s)"
+
+        values = (
+            product_id, kwargs['name'], kwargs['category'],
+            quantity, total_amount, kwargs['sales'])
+
         db.insert(query, values)
-        # update the products from the products table
-        Controller.update_product(
-            name=product.name, category=product.category,
-            quantity=new_quantity, price=product.price, product_id=product_id)
 
     @classmethod
     # load all products from the cart table
