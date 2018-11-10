@@ -48,11 +48,12 @@ class Controller:
     @classmethod
     def update_product(cls, **kwargs):
 
-        query = """UPDATE products SET name = '{}',
+        query = """ UPDATE products SET name = '{}',
          category = '{}', quantity = '{}',
-         price = '{}' WHERE product_id = '{}'
+         quantity_sold = '{}', price = '{}', sales = '{}' WHERE product_id = '{}'
          """.format(kwargs['name'], kwargs['category'], kwargs['quantity'],
-                    kwargs['price'], kwargs['product_id'])
+                    kwargs['quantity_sold'], kwargs['price'], kwargs['sales'],
+                    kwargs['product_id'])
 
         updated = db.update(query)
         if updated == 1:
