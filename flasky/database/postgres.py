@@ -25,9 +25,11 @@ class DataBase:
     def connect(cls, **kwargs):
         try:
             cls.connection = psycopg2.connect(
-                user=kwargs['user'],
+                host=kwargs['host'],
                 database=kwargs['database'],
-                password=kwargs['password']
+                user=kwargs['user'],
+                password=kwargs['password'],
+                port=kwargs['port']
                 )
 
             cls.cursor = cls.connection.cursor(
@@ -42,16 +44,25 @@ class DataBase:
     @classmethod
     def create_db_tables(cls):
         # create database tables
-        create_tables_sql = ('flasky/database/invalid_token_table.sql',
-                             'flasky/database/users_table.sql',
-                             'flasky/database/products_table.sql',
-                             'flasky/database/cart_table.sql',
-                             'flasky/database/sales_table.sql')
+        token_file = "flasky/database/invalid_token_table.sql"
+        users_file = "flasky/database/users_table.sql"
+        product_file = "flasky/database/products_table.sql"
+        cart_file = "flasky/database/cart_table.sql"
+        sale_file = "flasky/database/sales_table.sql"
 
-        for table in create_tables_sql:
-            query = open(table, mode='r', encoding='utf-8').read()
-            cls.cursor.execute(query)
-            cls.connection.commit()
+        token_sql = open(token_file, mode='r', encoding='utf-8').read()
+        users_sql = open(users_file, mode='r', encoding='utf-8').read()
+        product_sql = open(product_file, mode='r', encoding='utf-8').read()
+        cart_sql = open(cart_file, mode='r', encoding='utf-8').read()
+        sales_sql = open(sale_file, mode='r', encoding='utf-8').read()
+
+        cls.cursor.execute(users_sql)
+        cls.cursor.execute(product_sql)
+        cls.cursor.execute(token_sql)
+        cls.cursor.execute(cart_sql)
+        cls.cursor.execute(sales_sql)
+
+        self.connection.commit()
 
     @classmethod
     def drop_tables(cls):
