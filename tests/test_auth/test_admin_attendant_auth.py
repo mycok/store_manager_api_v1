@@ -50,6 +50,33 @@ class TestAdminSignUp(TestFixture):
             self.assertEqual(
                 data['message'], 'Please provide the correct name and/or username')
 
+    def test_admin_can_successfully_assign_admin_role_an_attendant(self):
+        with self.client:
+            resp = self.user_login()
+            data = json.loads(resp.data.decode())
+            token = data['token']
+
+            response = self.create_attendants(token)
+            self.assertEqual(response.status_code, 201)
+
+            update_response = self.edit_attendants(token)
+            self.assertEqual(update_response.status_code, 200)
+
+    def test_admin_cant_assign_admin_role_an_attendant(self):
+        with self.client:
+            resp = self.user_login()
+            data = json.loads(resp.data.decode())
+            token = data['token']
+
+            response = self.create_attendants(token)
+            self.assertEqual(response.status_code, 201)
+
+            update_response = self.cant_edit_attendants(token)
+            data = json.loads(update_response.data.decode())
+            self.assertEqual(update_response.status_code, 400)
+            self.assertEqual(
+                data['message'], 'user with email smth@tryy.com doesnot exist')
+
 
 class TestAdmin_Attendant_Login(TestFixture):
     def test_admin_attendant_login(self):
