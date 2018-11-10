@@ -19,7 +19,7 @@ class TestFixture(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.db = DataBase()
-        self.db.connect(dbname='postgres', user='postgres', password='1987')
+        self.db.connect(database='postgres', user='postgres', password='1987')
         self.db.create_db_tables()
         self.client = self.app.test_client()
         self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
@@ -45,6 +45,30 @@ class TestFixture(TestCase):
         email = 'smth@try.com'
         password = 'tHis#1245f'
         return self.client.post(
+            '/api/v2/auth/signup', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(
+                (dict(username=name, role=role, email=email, password=password)))
+        )
+
+    def edit_attendants(self, token):
+        name = 'intent'
+        role = 'Admin'
+        email = 'smth@try.com'
+        password = 'tHis#1245f'
+        return self.client.put(
+            '/api/v2/auth/signup', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(
+                (dict(username=name, role=role, email=email, password=password)))
+        )
+
+    def cant_edit_attendants(self, token):
+        name = 'intent'
+        role = 'Admin'
+        email = 'smth@tryy.com'
+        password = 'tHis#1245f'
+        return self.client.put(
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
@@ -452,6 +476,19 @@ class TestFixture(TestCase):
 
         return self.client.get(
             '/api/v2/sales', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token))
+
+    def get_all_sales_for_an_attendant(self, attendant):
+        """
+        send a GET request to fetch all sales
+        """
+        response = self.attendant_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        return self.client.get(
+            '/api/v2/sales/{}'.format(attendant),
+            content_type='application/json',
             headers=dict(Authorization='Bearer ' + token))
 
 # shopping cart helper methods
