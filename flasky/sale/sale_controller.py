@@ -31,6 +31,15 @@ class Controller:
             return sale
         return 'sale with ID ' + str(sale_id) + ' doesnot exist'
 
+    # fetch sale record by attendant
+    @classmethod
+    def fetch_sale_record_by_attendant(cls, attendant):
+        query = "SELECT * FROM sales WHERE attendant = '{}'".format(attendant)
+        sales = db.fetch_all(query)
+        if sales is not None:
+            return sales
+        return attendant + ' has no sales on record'
+
     # fetch all sale reccords
     @classmethod
     def fetch_all_sale_records(cls):
