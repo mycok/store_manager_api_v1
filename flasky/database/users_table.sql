@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS users (
   created_timestamp TIMESTAMP DEFAULT NOW()
 );
 
--- INSERT INTO users (user_id, username, email, password) VALUES(23489657345, 'kibuuka', 'me2@mail.com', '$2a$12$IQR112ysyLTUO1RfJWzkUejOLpJzz7xlGG.PykpYn9k72hnROEf.O
+-- INSERT INTO users (user_id, username, email, password) VALUES(23489657345, 'admin', 'admin@mail.com', '$2a$12$IQR112ysyLTUO1RfJWzkUejOLpJzz7xlGG.PykpYn9k72hnROEf.O
 -- ');
