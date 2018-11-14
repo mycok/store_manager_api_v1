@@ -8,7 +8,7 @@ class TestSaleModel(TestFixture):
     """
 
     def test_sale_init(self):
-        self.assertEqual(self.sale.attendant, 'kibuuka')
+        self.assertEqual(self.sale.attendant, 'prodigal')
         self.assertIsInstance(self.sale, Sale)
 
     def test_convert_sale_to_json(self):

@@ -10,7 +10,7 @@ class TestConfiguration(TestFixture):
 
     def test_config(self):
         app = create_app(config.Config)
-        self.assertTrue(app.config['DEBUG'])
+        self.assertFalse(app.config['DEBUG'])
 
     def test_development_config(self):
         app = create_app()
@@ -22,4 +22,4 @@ class TestConfiguration(TestFixture):
 
     def test_production_config(self):
         app = create_app(config.ProductionConfig)
-        self.assertTrue(app.config['DEBUG'])
+        self.assertFalse(app.config['DEBUG'])

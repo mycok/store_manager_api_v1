@@ -1,6 +1,5 @@
-from flasky.helper_functions import search_dict_by_key
-from flasky.helper_functions import return_all_dict_values
 from flasky.helper_functions import generate_id
+from flasky.database.postgres import db
 
 
 class Controller:
@@ -8,38 +7,60 @@ class Controller:
     Controller class for handling product
     interactions and storing product data
     """
-
-    def __init__(self):
-        self.products = {}
-
-    def add_product(self, product):
-        is_existing = self.check_if_product_exists(product.name)
-        if is_existing is False:
+    @classmethod
+    def add_product(cls, product):
+        is_existing = cls.check_if_product_exists(product.name)
+        if is_existing is None:
             product.product_id = generate_id()
-            self.products[product.product_id] = product
-            return True
-        return is_existing
+            query = "INSERT INTO products (product_id, name, category, quantity, quantity_sold, price, sales)\
+            VALUES(%s, %s, %s, %s, %s, %s, %s)"
+            values = (product.product_id, product.name, product.category, product.quantity, product.quantity_sold, product.price, product.sales)
+            db.insert(query, values)
+            return
+        return "product {} already exists".format(product.name)
 
-    def check_if_product_exists(self, name):
-        products = self.products.values()
-        for product_value in products:
-            if product_value.name == name:
-                return 'Product ' + product_value.name + ' already exists'
-        return False
+    @classmethod
+    def check_if_product_exists(cls, product_name):
+        query = "SELECT * FROM products WHERE name = '{}'".format(product_name)
+        return db.fetch_one(query)
 
-    def fetch_product_by_name(self, name):
-        products = self.products.values()
-        for product_value in products:
-            if product_value.name == name:
-                return product_value
+    @classmethod
+    def fetch_product_by_name(cls, product_name):
+        query = "SELECT * FROM products WHERE name = '{}'".format(product_name)
+        product = db.fetch_one(query)
+        if product is None:
+            return 'product ' + product_name + ' does not exist'
+        return product
 
-    def fetch_product_by_id(self, product_id):
-        value_name = 'product'
-        return search_dict_by_key(self.products, product_id, value_name)
+    @classmethod
+    def fetch_product_by_id(cls, product_id):
+        query = "SELECT * FROM products WHERE product_id = '{}'".format(product_id)
+        product = db.fetch_one(query)
+        if product is None:
+            return 'product with ID ' + str(product_id) + ' doesnot exist'
+        return product
 
-    def fetch_all_products(self):
-        value_name = 'products'
-        return return_all_dict_values(self.products, value_name)
+    @classmethod
+    def fetch_all_products(cls):
+        query = "SELECT * FROM products"
+        return db.select_query(query)
 
-# create an instance of a product controller class
-controller = Controller()
+    @classmethod
+    def update_product(cls, **kwargs):
+
+        query = """ UPDATE products SET name = '{}',
+         category = '{}', quantity = '{}',
+         quantity_sold = '{}', price = '{}', sales = '{}' WHERE product_id = '{}'
+         """.format(kwargs['name'], kwargs['category'], kwargs['quantity'],
+                    kwargs['quantity_sold'], kwargs['price'], kwargs['sales'],
+                    kwargs['product_id'])
+
+        updated = db.update(query)
+        if updated == 1:
+            return cls.fetch_product_by_id(kwargs['product_id'])
+        return "product update unsuccessful"
+
+    @classmethod
+    def delete_product_by_id(cls, product_id):
+        query = "DELETE FROM products WHERE product_id = '{}'".format(product_id)
+        return db.delete(query)

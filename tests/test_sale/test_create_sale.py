@@ -10,16 +10,22 @@ class TestCreateSale(TestFixture):
     def test_create_a_sale(self):
         # Test successful POST request to create a sale
         with self.client:
-            # first create a product to append to a sale
-            _ = self.create_product()
             # add product to cart
-            _ = self.add_product_to_shopping_cart()
+            _ = self.add_product_to_cart()
             # then create a sale with the appended product
             response = self.create_sale()
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
             self.assertEqual(data['attendant'], 'michael')
-            self.assertEqual(data['total_amount'], 1499.0)
+
+    def test_cant_create_a_sale_with_no_products(self):
+        # Test successful POST request to create a sale
+        with self.client:
+            # try to create a sale with no  products
+            response = self.create_sale()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(data['message'], 'please add products to cart')
 
     def test_create_sale_with_wrong_content_type(self):
         """
@@ -27,10 +33,7 @@ class TestCreateSale(TestFixture):
         create a sale with wrong content type
         """
         with self.client:
-            response = self.client.post(
-                '/api/v1/sales',
-                content_type="xml",
-                data=json.dumps(dict(attendant='ivan')))
+            response = self.create_sale_with_wrong_content_type()
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(data['message'], 'request must be of type json')
@@ -49,17 +52,16 @@ class TestCreateSale(TestFixture):
                 data['message'],
                 'please provide a valid attendant name')
 
-    def test_cant_create_sale_with_an_empty_string(self):
+    def test_cant_create_sale_as_an_admin(self):
         """
         Test unsuccessful POST request to
-        create a sale with an empty string
+        create a sale with admin previllages
         """
         with self.client:
-            response = self.client.post(
-                '/api/v1/sales',
-                content_type="application/json",
-                data=json.dumps(dict(attendant='  ')))
+            response = self.create_sale_as_admin()
+
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 401)
             self.assertEqual(
-                data['message'], 'please provide a valid attendant name')
+                data['message'],
+                'Attendant previllages required')

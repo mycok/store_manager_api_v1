@@ -17,7 +17,7 @@ def return_all_dict_values(data_set, value_name):
 def parse_product_dict(data_set):
     total = 0
     for item in data_set:
-        total += item['price']
+        total += item['amount']
     return total
 
 

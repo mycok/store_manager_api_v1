@@ -1,7 +1,7 @@
 from flasky.helper_functions import generate_id
 
 
-class Sale(object):
+class Sale:
     """
     class that defines a sale object
     """

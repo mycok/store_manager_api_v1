@@ -11,33 +11,44 @@ class TestFetchSingleSale(TestFixture):
         # Test successful GET request to fetch a sale by id
         with self.client:
             # post a product
-            _ = self.create_product()
+            _ = self.add_product_to_cart()
             # post a sale
             response = self.create_sale()
             data = json.loads(response.data.decode())
             sale_id = data['sale_id']
 
+            response = self.user_login()
+            data = json.loads(response.data.decode())
+            token = data['token']
+
             # get sale by id
             response = self.client.get(
-                '/api/v1/sales/{}'.format(sale_id),
-                content_type='application/json'
+                '/api/v2/sales/{}'.format(sale_id),
+                content_type='application/json',
+                headers=dict(Authorization='Bearer ' + token)
             )
             self.assertEqual(response.status_code, 200)
 
-    def test_cant_fetch_a_sale_an_with_out_of_range_index(self):
+    def test_cant_fetch_a_sale_with_an_invalid_id(self):
         """
         Test unsuccessful GET request to fetch
-        a sale with an out of range id index
+        a sale with an invalid id
         """
         with self.client:
             # post a product
             _ = self.create_product()
             # post a sale
             _ = self.create_sale()
-            # get that sale by id
+
+            response = self.user_login()
+            data = json.loads(response.data.decode())
+            token = data['token']
+
+            # get sale by id
             response = self.client.get(
-                '/api/v1/sales/10',
-                content_type='application/json'
+                '/api/v2/sales/123456789',
+                content_type='application/json',
+                headers=dict(Authorization='Bearer ' + token)
             )
 
             data = json.loads(response.data.decode())
@@ -45,4 +56,26 @@ class TestFetchSingleSale(TestFixture):
             self.assertEqual(data['status'], 'unsuccessful')
             self.assertEqual(
                 data['message'],
-                'sale record with ID 10 doesnot exist')
+                'sale with ID 123456789 doesnot exist')
+
+    def test_attendant_get_sale_by_id(self):
+            # Test successful GET request to fetch a sale by id
+        with self.client:
+            # post a product
+            _ = self.add_product_to_cart()
+            # post a sale
+            response = self.create_sale()
+            data = json.loads(response.data.decode())
+            sale_id = data['sale_id']
+
+            response = self.attendant_login()
+            data = json.loads(response.data.decode())
+            token = data['token']
+
+            # get sale by id
+            response = self.client.get(
+                '/api/v2/sales/{}'.format(sale_id),
+                content_type='application/json',
+                headers=dict(Authorization='Bearer ' + token)
+            )
+            self.assertEqual(response.status_code, 401)

@@ -10,14 +10,7 @@ class TestFetchSingleProduct(TestFixture):
          a product with an out of range id index
         """
         with self.client:
-            # post a question
-            _ = self.create_product()
-
-            # get that question by id
-            response = self.client.get(
-                '/api/v1/products/3',
-                content_type='application/json'
-            )
+            response = self.invalid_fetch_product()
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
@@ -28,16 +21,25 @@ class TestFetchSingleProduct(TestFixture):
         # Test successful GET request to fetch a product by id
         with self.client:
             # post a product
-            post_response = self.create_product()
-            post_data = json.loads(post_response.data.decode())
-            product_id = post_data.get('product_id')
-            self.assertIsInstance(product_id, int)
-
-            # get product by id
-            response = self.client.get(
-                '/api/v1/products/{}'.format(product_id),
-                content_type='application/json'
-            )
-            data = json.loads(response.data.decode())
+            response = self.fetch_product()
             self.assertEqual(response.status_code, 200)
-            self.assertTrue(data['name'], 'macbook pro')
+
+    def test_update_product_by_id(self):
+        with self.client:
+            response = self.update_product()
+            self.assertEqual(response.status_code, 200)
+
+    def test_cant_update_product_with_invalid_content_type(self):
+        with self.client:
+            response = self.cant_update_product_with_invalid_content_type()
+            self.assertEqual(response.status_code, 400)
+
+    def test_cant_update_product_as_an_attendant(self):
+        with self.client:
+            response = self.cant_update_product_as_an_attendant()
+            self.assertEqual(response.status_code, 401)
+
+    def test_delete_product_by_id(self):
+        with self.client:
+            response = self.delete_product()
+            self.assertEqual(response.status_code, 200)

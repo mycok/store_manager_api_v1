@@ -22,108 +22,120 @@ class DataBase:
         pass
 
     @classmethod
-    def connect(cls, *args):
+    def connect(cls, **kwargs):
         try:
             cls.connection = psycopg2.connect(
-                dbname=args[0], user=args[1], password=args[2])
+                host=kwargs['host'],
+                database=kwargs['database'],
+                user=kwargs['user'],
+                password=kwargs['password'],
+                port=kwargs['port']
+                )
+
             cls.cursor = cls.connection.cursor(
-                cursor_factory=psycopg2.extras.DictCursor)
+                cursor_factory=psycopg2.extras.RealDictCursor)
             print("...connected....")
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            cls.connection.rollback()
-            cls.connection.commit()
+        except (Exception) as error:
+            # cls.connection.rollback()
+            # cls.connection.commit()
             print('Failed to connect to the database {}'.format(error))
 
     @classmethod
     def create_db_tables(cls):
-        """creates all the tables for the db"""
+        # create database tables
+        token_file = "flasky/database/invalid_token_table.sql"
+        users_file = "flasky/database/users_table.sql"
+        product_file = "flasky/database/products_table.sql"
+        cart_file = "flasky/database/cart_table.sql"
+        sale_file = "flasky/database/sales_table.sql"
 
-        users = """CREATE TABLE IF NOT EXISTS users
-                (user_id UUID, username VARCHAR(255),
-                role VARCHAR(255), email VARCHAR(255) UNIQUE, password VARCHAR(255),
-                created_timestamp TIMESTAMP DEFAULT NOW())
-                """
+        token_sql = open(token_file, mode='r', encoding='utf-8').read()
+        users_sql = open(users_file, mode='r', encoding='utf-8').read()
+        product_sql = open(product_file, mode='r', encoding='utf-8').read()
+        cart_sql = open(cart_file, mode='r', encoding='utf-8').read()
+        sales_sql = open(sale_file, mode='r', encoding='utf-8').read()
 
-        invalidtoken = """CREATE TABLE IF NOT EXISTS invalidtoken
-                        (token_id SERIAL PRIMARY KEY, token VARCHAR(255))
-                       """
-        cls.cursor.execute(users)
-        cls.cursor.execute(invalidtoken)
+        cls.cursor.execute(users_sql)
+        cls.cursor.execute(product_sql)
+        cls.cursor.execute(token_sql)
+        cls.cursor.execute(cart_sql)
+        cls.cursor.execute(sales_sql)
+
         cls.connection.commit()
 
     @classmethod
     def drop_tables(cls):
-        users = "DROP TABLE IF EXISTS users CASCADE"
-        cls.cursor.execute(users)
-        cls.connection.commit()
-        print('...dropped...')
+        # drop/delete all existing tables from the database
+        drop_tables_sql = (
+            'DROP TABLE IF EXISTS users CASCADE',
+            'DROP TABLE IF EXISTS products CASCADE',
+            'DROP TABLE IF EXISTS invalidtokens CASCADE',
+            'DROP TABLE IF EXISTS cart CASCADE',
+            'DROP TABLE IF EXISTS sales CASCADE'
+        )
 
-    @classmethod
-    def insert(cls, insert_query, values):
-        try:
-            cls.cursor.execute(insert_query, values)
+        for table_query in drop_tables_sql:
+            cls.cursor.execute(table_query)
             cls.connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            cls.connection.rollback()
+            print('...dropped...')
+
+    def select_query(self, query):
+        items = self.fetch_all(query)
+        if not isinstance(items, list) or len(items) == 0:
+            return "No items available"
+        return items
+
+    def insert(self, insert_query, values):
+        try:
+            self.cursor.execute(insert_query, values)
+            self.connection.commit()
+        except (Exception) as error:
+            self.connection.rollback()
             print('Failed to insert data into table {}'.format(error))
 
-    @classmethod
-    def check(cls, select_query):
+    def update(self, update_query):
         try:
-            cls.cursor.execute(select_query)
-            return cls.cursor.fetchone()
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
-            print('Failed to select table data {}'.format(error))
-
-    @classmethod
-    def update(cls, update_query):
-        try:
-            cls.cursor.execute(update_query)
-            cls.connection.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            self.cursor.execute(update_query)
+            self.connection.commit()
+            return self.cursor.rowcount
+        except (Exception) as error:
+            if self.connection:
+                self.connection.rollback()
             print('Failed to update table data {}'.format(error))
 
-    @classmethod
-    def fetch_one(cls, query):
+    def fetch_one(self, fetch_one_query):
         try:
-            cls.cursor.execute(query)
-            return cls.cursor.fetchone()
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            self.cursor.execute(fetch_one_query)
+            return self.cursor.fetchone()
+        except (Exception) as error:
+            if self.connection:
+                self.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
 
-    @classmethod
-    def fetch_all(cls, query):
+    def fetch_all(self, fetch_all_query):
         try:
-            cls.cursor.execute(query)
-            return cls.cursor.fetchall()
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            self.cursor.execute(fetch_all_query)
+            return self.cursor.fetchall()
+        except (Exception) as error:
+            if self.connection:
+                self.connection.rollback()
             print('Failed to fetch table row data {}'.format(error))
 
-    @classmethod
-    def delete(cls, delete_query):
+    def delete(self, delete_query):
         try:
-            cls.cursor.execute(delete_query)
-            cls.connection.commit()
-            return cls.cursor.rowcount
-        except (Exception, psycopg2.DatabaseError) as error:
-            if cls.connection:
-                cls.connection.rollback()
+            self.cursor.execute(delete_query)
+            self.connection.commit()
+            return self.cursor.rowcount
+        except (Exception) as error:
+            if self.connection:
+                self.connection.rollback()
         print('Failed to delete table row data {}'.format(error))
 
-    @classmethod
-    def close(cls):
-        if cls.connection:
-            cls.cursor.close()
-            cls.connection.close()
+    def close(self):
+        if self.connection:
+            self.cursor.close()
+            self.connection.close()
 
 # create an instance of the database
 db = DataBase()

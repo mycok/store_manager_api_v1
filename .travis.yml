@@ -6,11 +6,21 @@ install:
   - pip install -r requirements.txt
   - pip install pytest pytest-cov
   - pip install coveralls
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+postgres:
+  adapter: postgresql
+  database: postgres
+  username: postgres
+  password: 1987
 script:
   - py.test
   - py.test --cov
 branches:
   only:
-    - shopping_cart
+    - ap1-v3-ft-#161573359-signup-login-logout
+
 after_success:
   - coveralls

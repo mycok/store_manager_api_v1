@@ -9,36 +9,26 @@ class TestCreateProduct(TestFixture):
         with self.client:
             response = self.create_product()
             data = json.loads(response.data.decode())
-            # self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, 201)
             self.assertEqual(data['message'], 'macbookair has been added')
 
-    def test_cant_create_a_duplicate_product(self):
-        # Test successful POST request to create a product
+    def test_create_a_product_with_attendant_previllages(self):
+        # Test unsuccessful POST request to create a product
         with self.client:
-            response = self.create_product()
-            # self.assertEqual(response.status_code, 201)
+            response = self.cant_create_product_as_an_attendant()
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(data['message'], 'Admin previllages required')
+
+    def test_cant_create_a_duplicate_product(self):
+        # Test unsuccessful POST request to create a duplicate product
+        with self.client:
+            _ = self.create_product()
 
             new_response = self.create_product()
             data = json.loads(new_response.data.decode())
             self.assertEqual(new_response.status_code, 400)
-            self.assertEqual(data['message'], 'Product macbookair already exists')
-
-    def test_create_product_with_wrong_content_type(self):
-        """
-         Test unsuccessful POST request to
-        create a product with wrong content type
-        """
-        with self.client:
-            response = self.client.post(
-                '/api/v1/products',
-                content_type="xml",
-                data=json.dumps(dict(name='macbook air',
-                                category='computers/laptops',
-                                quantity=4, price=1499.0)))
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(data['message'], 'request must be of type json')
-            self.assertEqual(data['status'], 'unsuccessful')
+            self.assertEqual(data['message'], 'product macbookair already exists')
 
     def test_create_product_with_a_missing_attribute(self):
         """
@@ -53,18 +43,14 @@ class TestCreateProduct(TestFixture):
             self.assertEqual(data['message'], 'quantity should be a number greater than zero')
             self.assertEqual(data['status'], 'unsuccessful')
 
-    def test_cant_create_product_with_an_empty_string(self):
+    def test_cant_create_product_with_an_empty_string_as_name(self):
         """
          Test unsuccessful POST request to
-        create a product with an empty string
+        create a product with an empty name string
         """
         with self.client:
-            response = self.client.post(
-                '/api/v1/products',
-                content_type="application/json",
-                data=json.dumps(dict(name='  ',
-                                category='computers/laptops',
-                                quantity=4, price=1499.0)))
+            response = self.create_product_with_an_empty_string()
+
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
