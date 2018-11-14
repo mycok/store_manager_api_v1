@@ -1,5 +1,3 @@
--- CREATE TYPE DESCP AS ENUM ('Admin', 'Attendant');
-
 
 CREATE TABLE IF NOT EXISTS users (
   user_id TEXT NOT NULL PRIMARY KEY,
@@ -9,6 +7,3 @@ CREATE TABLE IF NOT EXISTS users (
   role VARCHAR(255) DEFAULT 'Admin',
   created_timestamp TIMESTAMP DEFAULT NOW()
 );
-
--- INSERT INTO users (user_id, username, email, password) VALUES(23489657345, 'admin', 'admin@mail.com', '$2a$12$IQR112ysyLTUO1RfJWzkUejOLpJzz7xlGG.PykpYn9k72hnROEf.O
--- ');
