@@ -29,3 +29,11 @@ class UserController:
         if updated == 1:
             return cls.check_if_user_exists(email)
         return "user role update unsuccessful"
+
+    @classmethod
+    def update_user_password(cls, password, email):
+        query = "UPDATE users SET password = '{}' WHERE email = '{}'".format(password, email)
+        updated = db.update(query)
+        if updated == 1:
+            return cls.check_if_user_exists(email)
+        return "password update unsuccessful"
