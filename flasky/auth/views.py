@@ -124,6 +124,45 @@ class Login(MethodView):
            existing_user['username'] + ' is now logged in', token)
 
 
+class PasswordReset(MethodView):
+
+    methods = ['PUT']
+
+    decorators = [token_required]
+
+    @classmethod
+    def put(cls, current_user):
+        # check request content type
+        if not request.content_type == 'application/json':
+            abort(400, 'request must be of type json')
+        # extract request data
+        sent_data = request.get_json()
+        old_password = sent_data.get('old_password')
+        new_password = sent_data.get('new_password')
+        password_confirmation = sent_data.get('password_confirmation')
+        # validate password
+        if old_password == new_password:
+            return response(
+                'please provide a new password', 'unsuccessful', '400')
+        if new_password != password_confirmation:
+            return response(
+                'new password doesnot match password_confirmation',
+                'unsuccessful', 400)
+        is_password_valid = v.is_valid_password(password_confirmation)
+        if not is_password_valid:
+            return response(
+                'missing password/password should be atleast 4 characters',
+                'unsuccessful', 400)
+        # hash password
+        hashed_new_password = User.make_password(password_confirmation)
+        # update password
+        updated = controller.update_user_password(
+            hashed_new_password, current_user.email)
+        if isinstance(updated, dict):
+            return response(updated, 'successful', 200)
+        return response(updated, 'unsuccessful', 400)
+
+
 class Logout(MethodView):
 
     methods = ['POST']
@@ -141,11 +180,9 @@ class Logout(MethodView):
 
         except IndexError:
             return response('unable to extract token', 'unsuccessful', 403)
-
         # check if the token is already blacklisted
         is_token_invalid = TokenController.check_if_token_exists(
             auth_token)
-
         if isinstance(is_token_invalid, dict):
             return response(
                 'token already invalidated', 'unsuccessful', 400)
@@ -160,9 +197,11 @@ class Logout(MethodView):
 signup = SignUp.as_view('signup')
 login = Login.as_view('login')
 logout = Logout.as_view('logout')
+reset_password = PasswordReset.as_view('reset_password')
 
 
 # Add url_rules for the API endpoints
 auth_bp.add_url_rule('/auth/signup', view_func=signup)
 auth_bp.add_url_rule('/auth/login', view_func=login)
 auth_bp.add_url_rule('/auth/logout', view_func=logout)
+auth_bp.add_url_rule('/auth/reset', view_func=reset_password)
