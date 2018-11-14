@@ -24,7 +24,6 @@ def create_app(config_name=None):
             password='a1b8aa59b3efb84c23ab7ac94f479c2592dbd1c23658e4a0e01975b0c336e80d',
             port='5432'
             )
-        db.create_db_tables()
     # register blueprints
     app.register_blueprint(products_bp)
     app.register_blueprint(auth_bp)
