@@ -153,6 +153,7 @@ class PasswordReset(MethodView):
             return response(
                 'missing password/password should be atleast 4 characters',
                 'unsuccessful', 400)
+
         # hash password
         hashed_new_password = User.make_password(password_confirmation)
         # update password
