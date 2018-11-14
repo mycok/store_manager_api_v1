@@ -19,7 +19,8 @@ class TestFixture(TestCase):
     def setUp(self):
         self.app = create_app(config_name=TestingConfig)
         self.db = DataBase()
-        self.db.connect(database='postgres', user='postgres', password='1987')
+        self.db.connect(host=None, database='postgres',
+                        user='postgres', password='1987', port=5432)
         self.db.create_db_tables()
         self.client = self.app.test_client()
         self.product = Product('macbook', 'computers/laptops', 3, 1499.0)
@@ -188,6 +189,75 @@ class TestFixture(TestCase):
     def logout_without_authourization_header(self):
         return self.client.post(
             '/api/v2/auth/logout', content_type='application/json')
+
+    # reset password helper methods
+    def admin_password_reset(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        old_password = 'dNa#$1236'
+        new_password = 'nEw*pas314#'
+        password_confirmation = 'nEw*pas314#'
+
+        return self.client.put(
+            '/api/v2/auth/reset', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(dict(old_password=old_password,
+                                 new_password=new_password,
+                                 password_confirmation=password_confirmation))
+        )
+
+    def admin_password_reset_identical_passwords(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        old_password = 'dNa#$1236'
+        new_password = 'dNa#$1236'
+        password_confirmation = 'nEw*pas314#'
+
+        return self.client.put(
+            '/api/v2/auth/reset', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(dict(old_password=old_password,
+                                 new_password=new_password,
+                                 password_confirmation=password_confirmation))
+        )
+
+    def admin_password_reset_unmatching_passwords(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        old_password = 'dNa#$1236'
+        new_password = 'nEw*pas314#'
+        password_confirmation = 'nEw*pas314#Y'
+
+        return self.client.put(
+            '/api/v2/auth/reset', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(dict(old_password=old_password,
+                                 new_password=new_password,
+                                 password_confirmation=password_confirmation))
+        )
+
+    def admin_password_reset_with_invalid_password(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        old_password = 'dNa#$1236'
+        new_password = 'nEwpaY'
+        password_confirmation = 'nEwpaY'
+
+        return self.client.put(
+            '/api/v2/auth/reset', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(dict(old_password=old_password,
+                                 new_password=new_password,
+                                 password_confirmation=password_confirmation))
+        )
 
     # Product Model helper methods
     def create_product(self):
@@ -442,10 +512,10 @@ class TestFixture(TestCase):
         token = data['token']
 
         return self.client.post(
-                '/api/v2/sales',
-                content_type="xml",
-                headers=dict(Authorization='Bearer ' + token),
-                data=json.dumps(dict(attendant='ivan')))
+            '/api/v2/sales',
+            content_type="xml",
+            headers=dict(Authorization='Bearer ' + token),
+            data=json.dumps(dict(attendant='ivan')))
 
     def get_all_sales(self):
         """
