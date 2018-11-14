@@ -3,6 +3,7 @@ import json
 
 
 class TestPasswordReset(TestFixture):
+
     def test_admin_can_successfully_reset_his_password(self):
         with self.client:
             response = self.admin_password_reset()
