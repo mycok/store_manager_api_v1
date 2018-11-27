@@ -11,5 +11,5 @@ class TokenController:
 
     @classmethod
     def check_if_token_exists(cls, token):
-        query = "SELECT * FROM invalidtokens WHERE token = '{}'".format(token)
+        query = f"SELECT * FROM invalidtokens WHERE token = '{token}'"
         return db.fetch_one(query)
