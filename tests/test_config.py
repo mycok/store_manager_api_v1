@@ -13,7 +13,7 @@ class TestConfiguration(TestFixture):
         self.assertFalse(app.config['DEBUG'])
 
     def test_development_config(self):
-        app = create_app()
+        app = create_app(config.DevelopmentConfig)
         self.assertTrue(app.config['DEBUG'])
 
     def test_testing_config(self):
