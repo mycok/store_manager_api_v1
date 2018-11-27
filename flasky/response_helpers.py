@@ -26,13 +26,6 @@ def fetch_all_response(resource, resource_name):
     })), 200
 
 
-def all_products_response(products, status, status_code):
-    return make_response(jsonify({
-        'products': products,
-        'status': status
-    })), status_code
-
-
 # sale custom responses
 def single_sale_response(sale, status_code):
     return make_response(jsonify({
