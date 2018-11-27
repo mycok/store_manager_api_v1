@@ -57,16 +57,11 @@ def token_required(f):
             message = response(decoded_response, 'unsuccessful', 401)
         # extract the user from the
         # db and assign that user as an argument in the returned function
-        user = controller.fetch_user_by_id(decoded_response)
-        if user is None:
+        current_user = controller.fetch_user_by_id(decoded_response)
+        if current_user is None:
             message = response("user doesnot exist", 'unsuccessful', 401)
         if message is not None:
             return message
-
-        current_user = User(
-            username=user['username'], role=user['role'],
-            email=user['email'], password=user['password']
-            )
 
         return f(current_user, *args, **kwargs)
 
