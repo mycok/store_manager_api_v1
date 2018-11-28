@@ -8,11 +8,6 @@ class AddToCart(object):
     """ class that handles the operations of adding
     or removing products from the shopping cart
     """
-
-    def __init__(self):
-        # add database code here
-        pass
-
     # add products to a sale
     @classmethod
     def insert(cls, product_id, quantity):
@@ -53,14 +48,15 @@ class AddToCart(object):
     def save(cls, product_id, quantity, **kwargs):
         total_amount = kwargs['price'] * quantity
 
-        query = "INSERT INTO cart(product_id, name, category, quantity_sold, amount, sales)\
-            VALUES(%s, %s, %s, %s, %s, %s)"
-
-        values = (
-            product_id, kwargs['name'], kwargs['category'],
-            quantity, total_amount, kwargs['sales'])
-
-        db.insert(query, values)
+        query = f"""INSERT INTO cart(product_id, name, category, quantity_sold, amount, sales)
+                    VALUES(
+                        '{product_id}',
+                        '{kwargs['name']}',
+                        '{kwargs['category']}',
+                        '{quantity}', '{total_amount}',
+                        '{kwargs['sales']}')
+                """
+        db.insert(query)
 
     @classmethod
     # load all products from the cart table

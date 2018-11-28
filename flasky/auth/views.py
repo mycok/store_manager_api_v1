@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flasky.auth.auth_helper_functions import (
     auth_success_response, create_user_response
     )
-from flasky.response_helpers import response
+from flasky.response_helpers import (response, fetch_all_response)
 from flasky.auth.user_model_controller import UserController as controller
 from flasky.auth.invalid_token_controller import TokenController
 
@@ -21,7 +21,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/v2')
 
 class SignUp(MethodView):
 
-    methods = ['POST', 'PUT']
+    methods = ['POST', 'PUT', 'GET']
 
     decorators = [token_required]
 
@@ -31,7 +31,7 @@ class SignUp(MethodView):
         if not request.content_type == 'application/json':
             abort(400, 'request must be of type json')
         # check user role
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
         # extract request data
         sent_data = request.get_json()
@@ -50,7 +50,8 @@ class SignUp(MethodView):
         existing_user = controller.check_if_user_exists(email)
         if existing_user is not None:
             return response(
-                'user with email {} already exists'.format(existing_user['email']),
+                'user with email {} already exists'
+                .format(existing_user['email']),
                 'unsuccessful', 400)
         # save new user to the database
         controller.create_user(new_user)
@@ -64,7 +65,7 @@ class SignUp(MethodView):
         if not request.content_type == 'application/json':
             abort(400, 'request must be of type json')
         # check user role
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
         # extract request data
         sent_data = request.get_json()
@@ -86,6 +87,20 @@ class SignUp(MethodView):
         return response(
             'user with email ' + email + ' doesnot exist',
             'unsuccessful', 400)
+
+    @classmethod
+    def get(cls, current_user):
+        # check request content type
+        if not request.content_type == 'application/json':
+            abort(400, 'request must be of type json')
+        # check user role
+        if not is_admin_role(current_user['role']):
+            return response('Admin previllages required', 'unsuccessful', 401)
+        # query the database for all attendants
+        attendants = controller.fetch_all_attendants()
+        if not isinstance(attendants, list):
+            return response(attendants, 'unsuccessful', 200)
+        return fetch_all_response(attendants, 'attendants')
 
 
 class Login(MethodView):
@@ -112,7 +127,7 @@ class Login(MethodView):
                 'user with email ' + email + ' doesnot exist',
                 'unsuccessful', 401)
         # verify password
-        if not User.check_password(existing_user['password'], password):
+        if not User.check_password(password, existing_user['password']):
             return response(
                 'provided password is incorrect', 'unsuccessful', 401)
         # generate jwt token
@@ -154,11 +169,13 @@ class PasswordReset(MethodView):
                 'missing password/password should be atleast 4 characters',
                 'unsuccessful', 400)
 
+        if not User.check_password(old_password, current_user['password']):
+            return response('incorrect old password', 'unsuccessful', 400)
         # hash password
         hashed_new_password = User.make_password(password_confirmation)
         # update password
         updated = controller.update_user_password(
-            hashed_new_password, current_user.email)
+            hashed_new_password, current_user['email'])
         if isinstance(updated, dict):
             return response(updated, 'successful', 200)
         return response(updated, 'unsuccessful', 400)

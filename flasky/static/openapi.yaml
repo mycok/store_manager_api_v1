@@ -1,0 +1,648 @@
+openapi: 3.0.0
+info:
+  version: v3
+  title: Store Manager
+  description: >-
+    Keep track of product stock by monitoring and managing sales using simple
+    but efficient functions provided by the store manager API.
+  contact:
+    name: Store manager API
+    url: 'https://that-store-manager-app-v2.herokuapp.com'
+    email: awesomeme155@gmail.com
+servers:
+  - url: 'https://that-store-manager-app-v2.herokuapp.com/api/v2'
+    description: Production server with postgres database
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: A store admin can create a new attendant user account
+      description: >-
+        Create as many attendant user accounts as possible by passing the user
+        required parameters to a post request to the /auth/signup path .
+      parameters:
+        - name: name
+          in: query
+          description: >-
+            **Attendant name**. *Example: awesome*. This is a required parameter
+            and should be a valid string with atleast 3 characters.
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: >-
+            **Attendant**. *Example: Attendant*. This is a required parameter
+            and should be a valid string with atleast 3 characters.
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: >-
+            **Attendant email**. *Example: `awesome@me.mail`*.This is a required
+            parameter and should be a valid email string.*
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: >-
+            **Attendant password**.*Example: `swAgger1234#$`*. This is a
+            reqiured parameter and should contain atleast an uppercase
+            character, lowercase character, a digit/number, a symbol and must be
+            atleast 8 characters long.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: Sample
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: Placeholder description
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: request must be of type json
+                type: string
+                example: request must be of type json
+
+  /auth/signup/:
+    put:
+      tags:
+        - Authentication
+      summary: A store admin can promote an attendant to an admin
+      description: >-
+        Promote an attendant to an admin by passing
+        required parameters to a post request to the /auth/signup path .
+      parameters:
+        - name: name
+          in: query
+          description: >-
+            **Attendant name**. *Example: awesome*. This is a required parameter
+            and should be a valid string with atleast 3 characters.
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: >-
+            **Attendant**. *Example: Attendant*. This is a required parameter
+            and should be a valid string with atleast 3 characters.
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: >-
+            **Attendant email**. *Example: `awesome@me.mail`*.This is a required
+            parameter and should be a valid email string.*
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: >-
+            **Attendant password**.*Example: `swAgger1234#$`*. This is a
+            reqiured parameter and should contain atleast an uppercase
+            character, lowercase character, a digit/number, a symbol and must be
+            atleast 8 characters long.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: Sample
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: Placeholder description
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: request must be of type json
+                type: string
+                example: request must be of type json
+
+  /auth/signup//:
+    get:
+      tags:
+        - Authentication
+      summary: A store admin can fetch all attendants
+      description: >-
+        Fetch all attendants by passing
+        required parameters to a get request to the /auth/signup path .
+
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: Success
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: All attendants successfully retrieved
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: request must be of type json
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: A store admin or attendant can login into their user account
+      description: ' Pass the required parameters to a post request to the /auth/login path .'
+      parameters:
+        - name: email
+          in: query
+          description: >-
+            **Attendant email**. *Example: `awesome@me.mail`*.This is a required
+            parameter and should be a valid email string.*
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: >-
+            **Attendant password**.*Example: `swAgger1234#$`*. This is a
+            reqiured parameter and should contain atleast an uppercase
+            character, lowercase character, a digit/number, a symbol and must be
+            atleast 8 characters long.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: Sample
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: Placeholder description
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: request must be of type json
+                type: string
+                example: request must be of type json
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: A store admin or attendant can logout of their user account
+      description: ' Pass the required token parameter through a post request to the /auth/logout path .'
+      parameters:
+        - name: Auth token
+          in: query
+          description: >-
+            **JWT token**. *Example: `- key: Authorization
+                                        value: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NDMxOTIzMTMsImlhdCI6MTU0Mz`
+                                        .This is a required
+            parameter and should be a valid JWT token string.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: Admin/Attendant has successfully logged out
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: request must be of type json
+                type: string
+                example: request must be of type json
+
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                title: Token required
+                type: string
+                example: Provide an authorization header/token
+
+  /auth/resetpassword:
+    post:
+      tags:
+        - Authentication
+      summary: A store admin or attendant can reset their user account password
+      description: ' Pass the required password parameters through a post request to the /auth/reset path .'
+      parameters:
+        - name: old password
+          in: query
+          description: >-
+            **old password**. *Example: toDay%23*. This is a required parameter
+            and should be a valid string with atleast 8 characters including a digit and a special character.
+          schema:
+            type: string
+        - name: new password
+          in: query
+          description: >-
+           **new password**. *Example: somEd^23*. This is a required parameter
+            and should be a valid string with atleast 8 characters including a digit and a special character.
+          schema:
+            type: string
+        - name: confirm password
+          in: query
+          description: >-
+           **confirm password**. *Example: somEd^23*. This is a required parameter
+            and should be a valid string with atleast 8 characters including a digit and a special character.
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: Password reset successful
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: new password doesnot match password_confirmation
+                type: string
+                example: new password doesnot match password_confirmation
+
+  /products:
+    post:
+      tags:
+        - Products
+      summary: A store admin can add products
+      description: ' Pass the required product parameters through a post request to the /products path .'
+      parameters:
+        - name: name
+          in: query
+          description: >-
+            **product name**. *Example: Macbook Pro*. This is a required parameter and should be a valid string.
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: >-
+           **product category**. *Example: Computers*. This is a required parameter and should be a valid string.
+          schema:
+            type: string
+        - name: quantity
+          in: query
+          description: >-
+           **product quantity**. *Example: 200*. This is a required parameter
+            and should be a valid number greater than 0 .
+          schema:
+            type: number
+        - name: price
+          in: query
+          description: >-
+           **product price**. *Example: 10,000,000*. This is a required parameter
+            and should be a valid number greater than 0 .
+          schema:
+            type: number
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: Product successfully added
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: Product macbook pro already exists
+                type: string
+                example: Product macbook pro already exists
+
+        '401':
+          description: Unathourized
+          content:
+            application/json:
+              schema:
+                title: Admin previllages required
+                type: string
+                example: Admin previllages required
+
+  /products/:
+    get:
+      tags:
+        - Products
+      summary: A store admin can fetch all products
+      description: ' Pass the required token parameter through a get request to the /products path .'
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: All products successfully retrieved
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+  /products/id:
+    get:
+      tags:
+        - Products
+      summary: A store admin can fetch product by id
+      description: ' Pass the required id parameter through a get request to the /products/id path .'
+      parameters:
+        - name: id
+          in: query
+          description: >-
+            **product id**. *Example: 12564356*. This is a required parameter and should be a valid number.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: product with ID 12564356 successfully retrieved
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+  /products/id/:
+    put:
+      tags:
+        - Products
+      summary: A store admin can modify a product by id
+      description: ' Pass the required id parameter through a put request to the /products/id path .'
+      parameters:
+        - name: id
+          in: query
+          description: >-
+            **product id**. *Example: 12564356*. This is a required parameter and should be a valid number.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: product with ID 12564356 successfully updated
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+  /products/id//:
+    delete:
+      tags:
+        - Products
+      summary: A store admin can delete a product by id
+      description: ' Pass the required id parameter through a delete request to the /products/id path .'
+      parameters:
+        - name: id
+          in: query
+          description: >-
+            **product id**. *Example: 12564356*. This is a required parameter and should be a valid number.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: product with ID 12564356 successfully deleted
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+  /sales:
+    post:
+      tags:
+        - Sales
+      summary: A store attendant can make a sale
+      description: ' Pass the required sale parameters through a post request to the /sales path .'
+      parameters:
+        - name: name
+          in: query
+          description: >-
+            **attendant name**. *Example: Michael*. This is a required parameter and should be a valid string.
+          schema:
+            type: string
+        - name: products
+          in: query
+          description: >-
+           **products**. *Example: [products]*. This is a list of products or product for sale.
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: success
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: Content must be of type json
+                type: string
+                example: Content must be of type json
+
+        '401':
+          description: Unathourized
+          content:
+            application/json:
+              schema:
+                title: Attendant previllages required
+                type: string
+                example: Attendant previllages required
+
+  /sales/:
+    get:
+      tags:
+        - Sales
+      summary: A store admin can fetch all sales
+      description: ' Pass the required token parameter through a get request to the /sales path.'
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: All sales successfully retrieved
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+        '401':
+          description: Unathourized
+          content:
+            application/json:
+              schema:
+                title: Admin previllages required
+                type: string
+                example: Admin previllages required
+
+  /sales/id:
+    get:
+      tags:
+        - Sales
+      summary: A store admin can fetch a sale by id
+      description: ' Pass the required id parameter through a get request to the /sales/id path .'
+      parameters:
+        - name: id
+          in: query
+          description: >-
+            **sale id**. *Example: 12564356*. This is a required parameter and should be a valid number.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: sale with ID 12564356 successfully retrieved
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+
+        '401':
+          description: Unathourized
+          content:
+            application/json:
+              schema:
+                title: Admin previllages required
+                type: string
+                example: Admin previllages required
+
+  /sales/attendant:
+    get:
+      tags:
+        - Sales
+      summary: A store attendant can fetch his/her sale record by id
+      description: ' Pass the required id parameter through a get request to the /sales/attendant path .'
+      parameters:
+        - name: id
+          in: query
+          description: >-
+            **sale id**. *Example: 12564356*. This is a required parameter and should be a valid number.
+          schema:
+            type: number
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                title: success
+                type: string
+                example: sale with ID 12564356 successfully retrieved
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                title: content type must be of type json
+                type: string
+                example: content type must be of type json
+
+
+        '401':
+          description: Unathourized
+          content:
+            application/json:
+              schema:
+                title: Attendant previllages required
+                type: string
+                example: Attendant previllages required

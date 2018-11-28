@@ -20,7 +20,7 @@ script:
   - py.test --cov
 branches:
   only:
-    - ap1-v3-ft-#161573359-signup-login-logout
-
+    - heroku
+    - develop
 after_success:
   - coveralls

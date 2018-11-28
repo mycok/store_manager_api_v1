@@ -33,7 +33,7 @@ class ProductListView(MethodView):
         if not request.content_type == 'application/json':
             abort(400, 'request must be of type json')
         # check for user role
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
         # extract request data
         request_data = request.get_json()
@@ -42,7 +42,10 @@ class ProductListView(MethodView):
         quantity = request_data.get('quantity')
         price = request_data.get('price')
         # validate product object input
-        valid_input = v.validate_product(name=name, category=category, quantity=quantity, price=price)
+        valid_input = v.validate_product(
+            name=name, category=category,
+            quantity=quantity, price=price
+            )
         if not isinstance(valid_input, bool):
             return response(valid_input, 'unsuccessful', 400)
         # create a new product
@@ -97,7 +100,7 @@ class ProductView(MethodView):
         """
         if not request.content_type == 'application/json':
             return response('request must be of type json', 'failed', 400)
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
 
         sent_data = request.get_json()
@@ -110,8 +113,10 @@ class ProductView(MethodView):
 
         # query the database through a manager object
         updated = Controller.update_product(
-            name=name, category=category, quantity=quantity,
-            quantity_sold=quantity_sold, price=price, sales=sales, product_id=product_id)
+            name=name, category=category,
+            quantity=quantity, quantity_sold=quantity_sold,
+            price=price, sales=sales, product_id=product_id
+            )
 
         if updated is None:
             return response(updated, 'unsuccessful', 400)
@@ -128,7 +133,7 @@ class ProductView(MethodView):
         """
         if not request.content_type == 'application/json':
             return response('request must be of type json', 'failed', 400)
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
 
         # delete the product

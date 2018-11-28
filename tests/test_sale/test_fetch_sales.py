@@ -9,10 +9,13 @@ class TestFetchAllSales(TestFixture):
         fetch all sales
         """
         with self.client:
-            # create and product to cart
-            _ = self.add_product_to_cart()
+            # create and add product to cart
+            p_response = self.add_product_to_cart()
+            self.assertEqual(p_response.status_code, 201)
+
             # create a sale
-            _ = self.create_sale()
+            s_response = self.create_sale()
+            self.assertEqual(s_response.status_code, 201)
 
             # get all products
             get_response = self.get_all_sales()

@@ -9,7 +9,8 @@ class DataBase:
     create_db_tables() loads database tables.
     drop_db_tables() drops/destroys database tables.
     insert() adds object data into a database table.
-    check() searches for availability of a specific object and if found, returns that object.
+    check() searches for availability of a specific object and if found,
+    returns that object.
     update() updates object values for a particular table.
     fetchone() returns a single row table objects.
     fetchmany() returns a list of row table objects.
@@ -86,9 +87,17 @@ class DataBase:
             return "No items available"
         return items
 
-    def insert(self, insert_query, values):
+    def old_string_insert(self, old_insert_query, values):
         try:
-            self.cursor.execute(insert_query, values)
+            self.cursor.execute(old_insert_query, values)
+            self.connection.commit()
+        except (Exception) as error:
+            self.connection.rollback()
+            print('Failed to insert data into table {}'.format(error))
+
+    def insert(self, insert_query):
+        try:
+            self.cursor.execute(insert_query)
             self.connection.commit()
         except (Exception) as error:
             self.connection.rollback()

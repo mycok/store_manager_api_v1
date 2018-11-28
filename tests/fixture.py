@@ -49,7 +49,8 @@ class TestFixture(TestCase):
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
-                (dict(username=name, role=role, email=email, password=password)))
+                (dict(username=name, role=role,
+                      email=email, password=password)))
         )
 
     def edit_attendants(self, token):
@@ -61,7 +62,8 @@ class TestFixture(TestCase):
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
-                (dict(username=name, role=role, email=email, password=password)))
+                (dict(username=name, role=role,
+                      email=email, password=password)))
         )
 
     def cant_edit_attendants(self, token):
@@ -73,7 +75,9 @@ class TestFixture(TestCase):
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
-                (dict(username=name, role=role, email=email, password=password)))
+                (dict(
+                    username=name, role=role,
+                    email=email, password=password)))
         )
 
     def attendant_login(self):
@@ -93,7 +97,9 @@ class TestFixture(TestCase):
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
-                (dict(username=name, role=role, email=email, password=password)))
+                (dict(
+                    username=name, role=role,
+                    email=email, password=password)))
         )
 
     def cant_create_attendants_with_invalid_name(self, token):
@@ -105,7 +111,9 @@ class TestFixture(TestCase):
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization='Bearer ' + token),
             data=json.dumps(
-                (dict(username=name, role=role, email=email, password=password)))
+                (dict(
+                    username=name, role=role,
+                    email=email, password=password)))
         )
 
     def create_attendants_with_invalid_token(self):
@@ -117,7 +125,9 @@ class TestFixture(TestCase):
         return self.client.post(
             '/api/v2/auth/signup', content_type='application/json',
             headers=dict(Authorization=token),
-            data=json.dumps((dict(username=name, role=role, email=email, password=password))))
+            data=json.dumps((dict(
+                username=name, role=role,
+                email=email, password=password))))
 
     def create_attendants_with_missing_token(self):
         name = 'intent'
@@ -126,7 +136,9 @@ class TestFixture(TestCase):
         password = 'tHis#1245f'
         return self.client.post(
             '/api/v2/auth/signup', content_type='application/json',
-            data=json.dumps((dict(username=name, role=role, email=email, password=password))))
+            data=json.dumps((dict(
+                username=name, role=role,
+                email=email, password=password))))
 
     def user_login(self):
         email = 'me2@mail.com'
@@ -189,6 +201,16 @@ class TestFixture(TestCase):
     def logout_without_authourization_header(self):
         return self.client.post(
             '/api/v2/auth/logout', content_type='application/json')
+
+    def fetch_all_attendants(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+
+        return self.client.get(
+            '/api/v2/auth/signup', content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token)
+        )
 
     # reset password helper methods
     def admin_password_reset(self):
@@ -449,6 +471,36 @@ class TestFixture(TestCase):
             content_type='application/json',
             headers=dict(Authorization='Bearer ' + token))
 
+    def cant_delete_product_with_invalid_content_type(self):
+        response = self.user_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+        # post a product
+        product_response = self.create_product()
+        data = json.loads(product_response.data.decode())
+        product_id = data['product_id']
+
+        # get that product by id
+        return self.client.delete(
+            '/api/v2/products/{}'.format(product_id),
+            content_type='xml',
+            headers=dict(Authorization='Bearer ' + token))
+
+    def cant_delete_product_as_an_attendant(self):
+        response = self.attendant_login()
+        data = json.loads(response.data.decode())
+        token = data['token']
+        # post a product
+        product_response = self.create_product()
+        data = json.loads(product_response.data.decode())
+        product_id = data['product_id']
+
+        # get that product by id
+        return self.client.delete(
+            '/api/v2/products/{}'.format(product_id),
+            content_type='application/json',
+            headers=dict(Authorization='Bearer ' + token))
+
 # sale helper methods
     def create_sale(self):
         """
@@ -467,20 +519,6 @@ class TestFixture(TestCase):
     def create_sale_as_admin(self):
         """
         send a POST request to create a sale object as an admin
-        """
-        response = self.user_login()
-        data = json.loads(response.data.decode())
-        token = data['token']
-
-        return self.client.post(
-            '/api/v2/sales', content_type='application/json',
-            headers=dict(Authorization='Bearer ' + token),
-            data=json.dumps(
-                dict(attendant='michael')))
-
-    def create_sale_with_invalid_previllages(self):
-        """
-        send a POST request to create a sale object
         """
         response = self.user_login()
         data = json.loads(response.data.decode())

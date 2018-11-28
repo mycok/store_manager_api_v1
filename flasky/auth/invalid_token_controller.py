@@ -6,12 +6,10 @@ class TokenController:
     # class for handling and storing token data
     @classmethod
     def save_invalid_token(cls, token):
-        query = "INSERT INTO invalidtokens (token) VALUES\
-         (%s)"
-        values = (token.token,)
-        db.insert(query, values)
+        query = f"INSERT INTO invalidtokens (token) VALUES ('{token.token}')"
+        db.insert(query)
 
     @classmethod
     def check_if_token_exists(cls, token):
-        query = "SELECT * FROM invalidtokens WHERE token = '{}'".format(token)
+        query = f"SELECT * FROM invalidtokens WHERE token = '{token}'"
         return db.fetch_one(query)

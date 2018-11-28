@@ -5,10 +5,11 @@ import json
 from flasky.sale.sale_model import Sale
 from flasky.validator import Validation as v
 from flasky.cart.cart_controller import AddToCart
-from flasky.sale.sale_controller import controller
+from flasky.sale.sale_controller import Controller
 from flasky.response_helpers import (single_sale_response,
                                      response,
-                                     all_sales_response)
+                                     all_sales_response,
+                                     fetch_all_response)
 
 from flasky.auth.auth_decorator import (
     token_required, is_admin_role, is_attendant_role
@@ -33,8 +34,9 @@ class SaleRecordsView(MethodView):
             return response(
                 'request must be of type json', 'unsuccessful', 400)
 
-        if not is_attendant_role(current_user.role):
-            return response('Attendant previllages required', 'unsuccessful', 401)
+        if not is_attendant_role(current_user['role']):
+            return response('Attendant previllages required',
+                            'unsuccessful', 401)
         # extract request data
         request_data = request.get_json()
         attendant = request_data.get('attendant')
@@ -48,27 +50,31 @@ class SaleRecordsView(MethodView):
         products = AddToCart.load_cart()
         if not isinstance(products, list) or len(products) == 0:
             return response('please add products to cart', 'unsuccessful', 400)
+
         new_sale.products += products
         # update product attributes
         AddToCart.update_sale_attributes(new_sale, products)
         # save new sale object
-        controller.add_sale_record(new_sale)
-        new_sale.products = [json.loads(product) for product in new_sale.products]
+        Controller.add_sale_record(new_sale)
+        new_sale.products = [json.loads(product)
+                             for product in new_sale.products]
         # return response with a new sale
         return single_sale_response(new_sale, 201)
 
     # fetch all sales
     @classmethod
     def get(cls, current_user):
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
 
-        sales = controller.fetch_all_sale_records()
+        sales = Controller.fetch_all_sale_records()
         if not isinstance(sales, list):
             return response(sales, 'unsuccessful', 400)
+
         for index, sale in enumerate(sales):
-            sales[index] = [json.loads(product) for product in sale['products']]
-        return all_sales_response((sales), 'successful', 200)
+            sales[index]['products'] = [json.loads(product) for product in sale['products']]
+
+        return all_sales_response(sales, 'successful', 200)
 
 
 class SaleView(MethodView):
@@ -80,13 +86,17 @@ class SaleView(MethodView):
     @classmethod
     def get(cls, current_user, sale_id):
         # GET request to fetch a sale by id
-        if not is_admin_role(current_user.role):
+        if not is_admin_role(current_user['role']):
             return response('Admin previllages required', 'unsuccessful', 401)
 
-        sale = controller.fetch_sale_record(sale_id)
+        sale = Controller.fetch_sale_record(sale_id)
         if not isinstance(sale, dict):
             return response(sale, 'unsuccessful', 400)
-        sale['products'] = [json.loads(product) for product in sale['products']]
+        print(sale)
+
+        sale['products'] = [json.loads(product)
+                            for product in sale['products']]
+
         return jsonify(sale, 'success'), 200
 
 
@@ -99,11 +109,14 @@ class SaleAttendant(MethodView):
     @classmethod
     def get(cls, current_user, attendant):
         # GET request to fetch a sale by attendant
-        sales = controller.fetch_sale_record_by_attendant(attendant)
-        if not isinstance(sales, list):
+        sales = Controller.fetch_sale_record_by_attendant(attendant)
+        if isinstance(sales, str):
             return response(sales, 'unsuccessful', 400)
+
         for index, sale in enumerate(sales):
-            sales[index] = [json.loads(product) for product in sale['products']]
+            sales[index] = [json.loads(product)
+                            for product in sale['products']]
+
         return all_sales_response((sales), 'successful', 200)
 
 

@@ -48,7 +48,8 @@ class TestAdminSignUp(TestFixture):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
-                data['message'], 'Please provide the correct name and/or username')
+                data['message'],
+                'Please provide the correct name and/or username')
 
     def test_admin_can_successfully_assign_admin_role_an_attendant(self):
         with self.client:
@@ -106,7 +107,8 @@ class TestAdmin_Attendant_Login(TestFixture):
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 401)
             self.assertEqual(
-                data['message'], 'missing password/password should be atleast 4 characters')
+                data['message'],
+                'missing password/password should be atleast 4 characters')
 
     def test_admin_attendant_cant_login_with_invalid_email(self):
         with self.client:
@@ -121,7 +123,9 @@ class TestAdmin_Attendant_Login(TestFixture):
             response = self.create_attendants_with_invalid_token()
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 403)
-            self.assertEqual(data['message'], 'failed to extract a token. please provide a valid token')
+            self.assertEqual(
+                data['message'],
+                'failed to extract a token. please provide a valid token')
 
     def test_admin_cant_signup_or_login_without_a_token(self):
         with self.client:

@@ -30,7 +30,7 @@ class User:
         return bcrypt.hashpw(raw_password, bcrypt.gensalt())
 
     @classmethod
-    def check_password(cls, password_hash, raw_password):
+    def check_password(cls, raw_password, password_hash):
         """
         Method used to validate password
 

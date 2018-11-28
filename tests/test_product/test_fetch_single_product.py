@@ -38,8 +38,3 @@ class TestFetchSingleProduct(TestFixture):
         with self.client:
             response = self.cant_update_product_as_an_attendant()
             self.assertEqual(response.status_code, 401)
-
-    def test_delete_product_by_id(self):
-        with self.client:
-            response = self.delete_product()
-            self.assertEqual(response.status_code, 200)

@@ -79,3 +79,25 @@ class TestFetchSingleSale(TestFixture):
                 headers=dict(Authorization='Bearer ' + token)
             )
             self.assertEqual(response.status_code, 401)
+
+    def test_get_sale_by_attendant(self):
+        # Test successful GET request to fetch a sale by id
+        with self.client:
+            # post a product
+            _ = self.add_product_to_cart()
+            # post a sale
+            response = self.create_sale()
+            data = json.loads(response.data.decode())
+            attendant = data['attendant']
+
+            response = self.attendant_login()
+            data = json.loads(response.data.decode())
+            token = data['token']
+
+            # get sale by id
+            response = self.client.get(
+                '/api/v2/sales/{}'.format(attendant),
+                content_type='application/json',
+                headers=dict(Authorization='Bearer ' + token)
+            )
+            self.assertEqual(response.status_code, 200)
