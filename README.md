@@ -30,6 +30,9 @@ cd store_manager_api_v1
 python run.py
 ```
 
+[Checkout the app documentation on heroku!!](https://that-store-manager-app-v2.herokuapp.com)
+
+
 ## Product Models
 These represent a product that could be created by a user on the app platform. The product object takes four required attributes (name, category, quantity, price).
 A **url** to post a product could take a **POST** request to an endpoint with a format such as **api/v1/products**.
