@@ -27,7 +27,7 @@ python-dateutil==2.7.3
 python-editor==1.0.3
 python-mimeparse==1.6.0
 pytz==2018.4
-PyYAML==3.13
+PyYAML==5.4
 red==0.2.1
 requests==2.19.1
 testing.common.database==2.0.3
